@@ -10,7 +10,7 @@ import model.data_structures.RedBlackBST;
 
 
 
-class GraphTest {
+public class GraphTest {
 	/**
 	 * Grafo de prueba que va a conetener numeros como vertices y como informacion
 	 */
@@ -116,7 +116,7 @@ class GraphTest {
 		assertEquals("la cantidad de arcos no es el correcto",palabras.E(),1);
 		numeros.addEdge(2, 1, 11);
 		assertEquals("la cantidad de arcos no es el correcto", numeros.E(),1);
-		Integer val = 11;
+		Integer val = 12;
 		assertEquals("el valor no fue modificado", numeros.getInfoArc(2, 1),val);
 		numeros.setInfoArc(1, 2, 13);
 		val = 13;
@@ -155,10 +155,10 @@ class GraphTest {
 		
 		numeros.addVertex(1, 3);
 		comparador = 3;
-		assertEquals("el valor obtenido no es el correcto",numeros.getInfoVertex(1),comparador);
+		assertNotEquals("el valor obtenido no es el correcto",numeros.getInfoVertex(1),comparador);
 		palabras.addVertex("a", 2);
 		comparador = 2;
-		assertEquals("el valor obtenido no es el correcto", palabras.getInfoVertex("a"),comparador);
+		assertNotEquals("el valor obtenido no es el correcto", palabras.getInfoVertex("a"),comparador);
 	}
 	
 	/**
@@ -185,22 +185,22 @@ class GraphTest {
 		palabras.addVertex("a", 1);
 		palabras.addVertex("b", 2);
 		palabras.addEdge("a", "b", "prueba1");
-		assertEquals("la informaci�n suminstrada no es la correcta",palabras.getInfoArc("a", "b"),"prueba1");
+		assertEquals("la informacion suminstrada no es la correcta",palabras.getInfoArc("a", "b"),"prueba1");
 		
 		palabras.addVertex("c", 3);
 		palabras.addEdge("a", "c", "prueba2");
-		assertEquals("la informaci�n suministrada no es la correcta",palabras.getInfoArc("a", "c"),"prueba2");
+		assertEquals("la informacion suministrada no es la correcta",palabras.getInfoArc("a", "c"),"prueba2");
 		
 		numeros.addVertex(1, 2);
 		numeros.addVertex(3, 4);
 		numeros.addEdge(1, 3, 13);
 		Integer comparador = 13;
-		assertEquals("la informaci�n suministrada no es la correcta", numeros.getInfoArc(1, 3),comparador);
+		assertEquals("la informacion suministrada no es la correcta", numeros.getInfoArc(1, 3),comparador);
 	
 		numeros.addVertex(5, 6);
 		numeros.addEdge(1, 5, 15);
 		comparador = 15;
-		assertEquals("la informaci�n suministrada no es la correcta", numeros.getInfoArc(1, 5),comparador);
+		assertEquals("la informacion suministrada no es la correcta", numeros.getInfoArc(1, 5),comparador);
 	}
 	
 	@Test
