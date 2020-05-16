@@ -48,6 +48,7 @@ public class Graph <K extends Comparable<K>,V extends Comparable<V>,A extends Co
 		adj.getElement(w).enqueue(toAdd);
 		E++;
 	}
+
 	
 	public void addVertex(K idVertex, V infoVertex) {
 		if(st.get(idVertex) != null)
