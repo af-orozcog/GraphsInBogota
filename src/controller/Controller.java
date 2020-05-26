@@ -27,6 +27,9 @@ public class Controller {
 	
 	Graph<Integer,VertexInfo,Double> grafo = new Graph<Integer,VertexInfo,Double>();
 	
+	ORArray<PairComp<Integer, Integer>> infraccionesNodo;
+	
+	ORArray<Integer> nodosConEstaciones; 
 	
 	private Comparable<Comparendo>[] consulta;
 	/**
@@ -171,7 +174,7 @@ public class Controller {
 	public void CaminoDistanciaMinima1A(int idVertice1, int idVertice2) {
 		ORArray<Integer> send = new ORArray<Integer>();
 		send.add(idVertice1);
-		Dijkstra<Integer> caminos = new Dijkstra<Integer>(this.grafo,send,false);
+		Dijkstra caminos = new Dijkstra(this.grafo,send,false);
 		System.out.println("La distancia más corta entre ambos puntos es: "+ caminos.distance(grafo.translateInverse(idVertice2)));
 		ORArray<Edge<Double>> paint = caminos.journey(grafo.translateInverse(idVertice2));
 		//TODO falta pintar mi doggo
@@ -185,7 +188,7 @@ public class Controller {
 	public void CaminoDistanciaMinima1B(int idVertice1, int idVertice2) {
 		ORArray<Integer> send = new ORArray<Integer>();
 		send.add(idVertice1);
-		Dijkstra<Integer> caminos = new Dijkstra<Integer>(this.grafo,send,true);
+		Dijkstra caminos = new Dijkstra(this.grafo,send,true);
 		System.out.println("La distancia más corta entre ambos puntos es, según numero de infracciones: "+ caminos.distance(grafo.translateInverse(idVertice2)));
 		ORArray<Edge<Double>> paint = caminos.journey(grafo.translateInverse(idVertice2));
 		//TODO falta pintar mi doggo
@@ -205,9 +208,9 @@ public class Controller {
 		for(Edge<Double> ed: arcos) {
 			int from = ed.either();
 			int to = ed.other(from);
-			g.addVertex(from, grafo.getInfoVertex(grafo.translateInverse(from)));
-			g.addVertex(to, grafo.getInfoVertex(grafo.translateInverse(to)));
-			g.addEdge(from, to, ed.getInfo());
+			g.addVertex(grafo.translateInverse(from), grafo.getInfoVertex(grafo.translateInverse(from)));
+			g.addVertex(grafo.translateInverse(to), grafo.getInfoVertex(grafo.translateInverse(to)));
+			g.addEdge(grafo.translateInverse(from), grafo.translateInverse(to), ed.getInfo());
 		}
 		return g;
 	}
@@ -235,8 +238,9 @@ public class Controller {
 		need.sort(comp);
 		HashTableSC<Integer, Integer> needed = new HashTableSC<Integer, Integer>(200);
 		for(int i = need.getSize()-1, j = 0; i > -1 && j < m;--i,++j)
-			needed.put(need.getElement(i).getSecond(), 1);
+			needed.put(g.translate(need.getElement(i).getSecond()), 1);
 		ORArray<Edge<Double>> aPintar = Graph.pruneMST(g, needed);
+		
 	}
 	
 	
@@ -245,26 +249,56 @@ public class Controller {
 	 */
 	public void ArbolMayorGravedad(int m) {
 		Graph<Integer,VertexInfo,Double> g = MST();
-		ORArray<PairComp<Integer, VertexInfo>> vertex = new ORArray<PairComp<Integer, VertexInfo>>();
-		Iterator<Integer> it = g.vertices();
-		while(it.hasNext()) {
-			int val = it.next();
-			vertex.add(new PairComp<Integer, VertexInfo>(val, grafo.getInfoVertex(g.translateInverse(val))));
-		}
-		ORArray<PairComp<Double, Integer>> need = new ORArray<PairComp<Double,Integer>>();
-		for(int i = 0; i < vertex.getSize();++i) 
-			need.add(new PairComp<Double,Integer>(vertex.getElement(i).getSecond().getInfo1(),vertex.getElement(i).getFirst()));
-		Comparator<PairComp<Double,Integer>> comp = new Comparator<PairComp<Double,Integer>>() {
+		Comparator<PairComp<Integer,Integer>> comp = new Comparator<PairComp<Integer,Integer>>() {
 			@Override
-			public int compare(PairComp<Double, Integer> o1, PairComp<Double, Integer> o2) {
+			public int compare(PairComp<Integer, Integer> o1, PairComp<Integer, Integer> o2) {
 				return o1.getFirst().compareTo(o2.getFirst());
 			}
 		};
-		need.sort(comp);
+		infraccionesNodo.sort(comp);
 		HashTableSC<Integer, Integer> needed = new HashTableSC<Integer, Integer>(200);
-		for(int i = need.getSize()-1, j = 0; i > -1 && j < m;--i,++j)
-			needed.put(need.getElement(i).getSecond(), 1);
+		for(int i = infraccionesNodo.getSize()-1, j = 0; i > -1 && j < m;--i,++j)
+			needed.put(g.translate(infraccionesNodo.getElement(i).getSecond()), 1);
 		ORArray<Edge<Double>> aPintar = Graph.pruneMST(g, needed);
+	}
+	
+	/**
+	 * 
+	 * @param m
+	 */
+	public void shortestPathsPolice(int m) {
+		Comparator<PairComp<Integer,Integer>> comp = new Comparator<PairComp<Integer,Integer>>() {
+			@Override
+			public int compare(PairComp<Integer, Integer> o1, PairComp<Integer, Integer> o2) {
+				return o1.getFirst().compareTo(o2.getFirst());
+			}
+		};
+		
+		infraccionesNodo.sort(comp);
+		HashTableSC<Integer, Integer> needed = new HashTableSC<Integer, Integer>(200);
+		for(int i = infraccionesNodo.getSize()-1, j = 0; i > -1 && j < m;--i,++j)
+			needed.put(infraccionesNodo.getElement(i).getSecond(), 1);
+		Dijkstra caminos = new Dijkstra(this.grafo,nodosConEstaciones,false);
+		ORArray<Edge<Double>> aPintar = new ORArray<Edge<Double>>();
+		Iterator<Integer> it = needed.keys();
+		while(it.hasNext()) {
+			Integer see = it.next();
+			ORArray<Edge<Double>> road = caminos.journey(see);
+			for(Edge<Double> edg: road){
+				aPintar.add(edg);
+			}
+		}
+		//TODO pintelo mi doggo
+	}
+	
+	/**
+	 * 
+	 */
+	public void PoliceStationComponents() {
+		Dijkstra caminos = new Dijkstra(this.grafo,nodosConEstaciones,false);
+		Graph<Integer,VertexInfo,Double> G = caminos.generateGraph();
+		HashTableSC<Integer,ORArray<Edge<Double>>> pintar = Graph.ConnectedComponent(G);
+		//la llave es el color y los arcos
 	}
 	
 }

@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import model.vo.VertexInfo;
 
-public class Dijkstra<K extends Comparable<K>> {
+public class Dijkstra {
 	/**
 	 * 
 	 */
@@ -21,7 +21,10 @@ public class Dijkstra<K extends Comparable<K>> {
 	private MinPQ<PairComp<Double,Integer>> pq;
 
 	
-	Graph<K,VertexInfo,Double> graph;
+	/**
+	 * 
+	 */
+	Graph<Integer,VertexInfo,Double> graph;
 	
 	/**
 	 * 
@@ -29,7 +32,7 @@ public class Dijkstra<K extends Comparable<K>> {
 	 * @param s
 	 * @param option
 	 */
-	public Dijkstra(Graph<K,VertexInfo,Double> G,ORArray<K> s, boolean option)
+	public Dijkstra(Graph<Integer,VertexInfo,Double> G,ORArray<Integer> s, boolean option)
 	{
 		graph = G;
 		dad = new Integer[G.V()];
@@ -37,7 +40,7 @@ public class Dijkstra<K extends Comparable<K>> {
 		pq = new MinPQ<PairComp<Double,Integer>>(G.V());
 		for (int v = 0; v < G.V(); v++)
 			distTo[v] = Double.POSITIVE_INFINITY;
-		for(K va: s) {
+		for(Integer va: s) {
 			distTo[G.translate(va)] = 0.0;
 			dad[G.translate(va)] = -1;
 			pq.insert(new PairComp<Double,Integer>(0.0,G.translate(va)));
@@ -62,11 +65,11 @@ public class Dijkstra<K extends Comparable<K>> {
 		}
 	}
 	
-	public Double distance(K to) {
+	public Double distance(Integer to) {
 		return distTo[graph.translate(to)];
 	}
 	
-	public ORArray<Edge<Double>> journey(K to){
+	public ORArray<Edge<Double>> journey(Integer to){
 		if(distTo[graph.translate(to)] == Double.POSITIVE_INFINITY) return null;
 		ORArray<Edge<Double>> ans = new ORArray<Edge<Double>>();
 		int rev = graph.translate(to);
@@ -76,4 +79,15 @@ public class Dijkstra<K extends Comparable<K>> {
 		}
 		return ans;
 	}
+	public Graph<Integer,VertexInfo,Double> generateGraph(){
+		Graph<Integer,VertexInfo,Double> ans = new Graph<Integer,VertexInfo,Double>();
+		for(int i = 0; i < dad.length;++i) {
+			if(distTo[i] == Double.POSITIVE_INFINITY || dad[i] == -1) continue;
+			ans.addVertex(graph.translateInverse(i), graph.getInfoVertex(graph.translateInverse(i)));
+			ans.addVertex(graph.translateInverse(dad[i]), graph.getInfoVertex(graph.translateInverse(dad[i])));
+			ans.addEdge(graph.translateInverse(i), graph.translateInverse(dad[i]), graph.getInfoArc(graph.translateInverse(i), graph.translateInverse(dad[i])));
+		}
+		return ans;
+	}
+	
 }

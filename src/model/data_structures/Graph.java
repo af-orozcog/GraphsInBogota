@@ -195,7 +195,7 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 		ORArray<Edge<Double>> ans = new ORArray<Edge<Double>>();
 		Integer fi = needed.keys().next();
 		boolean marked[] = new boolean[graph.V()];
-		modifiedDFS(fi,graph,needed,ans,marked);
+		modifiedDFS(graph.translate(fi),graph,needed,ans,marked);
 		return null;
 	}
 	
@@ -218,9 +218,50 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 			Integer ad = it.next();
 			if(marked[graph.translate(ad)]) continue;
 			boolean should = modifiedDFS(graph.translate(ad), graph, needed, ans, marked);
-			if(should) ans.add(graph.getEdge(graph.translateInverse(t), ad));
+			if(should) {ans.add(graph.getEdge(graph.translateInverse(t), ad));ret = true;}
 		}
 		return ret;
+	}
+	
+	
+	/**
+	 * 
+	 * @param graph
+	 * @return
+	 */
+	public static HashTableSC<Integer, ORArray<Edge<Double>>> ConnectedComponent(Graph<Integer,VertexInfo,Double> graph){
+		HashTableSC<Integer,ORArray<Edge<Double>>> ans = new HashTableSC<Integer,ORArray<Edge<Double>>>(299);
+		Iterator<Integer> it = graph.vertices();
+		int color = 1;
+		boolean marked[] = new boolean[graph.V()];
+		while(it.hasNext()) {
+			Integer from = it.next();
+			if(marked[graph.translate(from)])continue;
+			DFSColors(graph.translate(from),graph,ans,marked,color);
+			++color;
+		}
+		return ans;
+	}
+	
+	/**
+	 * 
+	 * @param t
+	 * @param graph
+	 * @param ans
+	 * @param marked
+	 * @param color
+	 */
+	private static void DFSColors(int t,Graph<Integer,VertexInfo,Double> graph, HashTableSC<Integer,ORArray<Edge<Double>>> ans, boolean marked[], int color) {
+		marked[t] = true;
+		Iterator<Integer> it = graph.adj(graph.translateInverse(t));
+		while(it.hasNext()) {
+			Integer ad = it.next();
+			if(marked[graph.translate(ad)]) continue;
+			if(!ans.contains(color)) 
+				ans.put(color, new ORArray<Edge<Double>>());
+			ans.get(color).add(graph.getEdge(t, ad));
+			DFSColors(graph.translate(ad), graph, ans, marked,color);
+		}
 	}
 	
 }
