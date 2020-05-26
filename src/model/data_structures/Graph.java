@@ -3,6 +3,7 @@ import java.util.Iterator;
 
 import model.data_structures.ORArray;
 import model.data_structures.Queue;
+import model.vo.VertexInfo;
 import model.data_structures.Edge;
 public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 
@@ -190,7 +191,7 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 	 * @param needed
 	 * @return
 	 */
-	public ORArray<Edge<Double>> pruneMST(Graph<K,V,Double> graph, HashTableSC<Integer,Integer> needed){
+	public static ORArray<Edge<Double>> pruneMST(Graph<Integer,VertexInfo,Double> graph, HashTableSC<Integer,Integer> needed){
 		ORArray<Edge<Double>> ans = new ORArray<Edge<Double>>();
 		Integer fi = needed.keys().next();
 		boolean marked[] = new boolean[graph.V()];
@@ -207,14 +208,14 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 	 * @param marked
 	 * @return
 	 */
-	private boolean modifiedDFS(int t,Graph<K,V,Double> graph, HashTableSC<Integer,Integer> needed, ORArray<Edge<Double>> ans,
+	private static boolean modifiedDFS(int t,Graph<Integer,VertexInfo,Double> graph, HashTableSC<Integer,Integer> needed, ORArray<Edge<Double>> ans,
 			boolean marked[]) {
 		marked[t] = true;
 		boolean ret = false;
 		if(needed.contains(t)) ret = true;
-		Iterator<K> it = graph.adj(graph.translateInverse(t));
+		Iterator<Integer> it = graph.adj(graph.translateInverse(t));
 		while(it.hasNext()) {
-			K ad = it.next();
+			Integer ad = it.next();
 			if(marked[graph.translate(ad)]) continue;
 			boolean should = modifiedDFS(graph.translate(ad), graph, needed, ans, marked);
 			if(should) ans.add(graph.getEdge(graph.translateInverse(t), ad));

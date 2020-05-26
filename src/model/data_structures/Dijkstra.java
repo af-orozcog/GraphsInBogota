@@ -29,7 +29,7 @@ public class Dijkstra<K extends Comparable<K>> {
 	 * @param s
 	 * @param option
 	 */
-	public Dijkstra(Graph<K,VertexInfo,Double> G,K s, boolean option)
+	public Dijkstra(Graph<K,VertexInfo,Double> G,ORArray<K> s, boolean option)
 	{
 		graph = G;
 		dad = new Integer[G.V()];
@@ -37,9 +37,11 @@ public class Dijkstra<K extends Comparable<K>> {
 		pq = new MinPQ<PairComp<Double,Integer>>(G.V());
 		for (int v = 0; v < G.V(); v++)
 			distTo[v] = Double.POSITIVE_INFINITY;
-		distTo[G.translate(s)] = 0.0;
-		dad[G.translate(s)] = -1;
-		pq.insert(new PairComp<Double,Integer>(0.0,G.translate(s)));
+		for(K va: s) {
+			distTo[G.translate(va)] = 0.0;
+			dad[G.translate(va)] = -1;
+			pq.insert(new PairComp<Double,Integer>(0.0,G.translate(va)));
+		}
 		while(pq.size() != 0) {
 			PairComp<Double,Integer> front = pq.delMin();
 			if(distTo[front.getSecond()] < front.getFirst()) continue;
