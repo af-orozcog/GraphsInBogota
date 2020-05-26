@@ -1,6 +1,6 @@
 package model.data_structures;
 
-public class KruskalMST<K extends Comparable<K>,V extends Comparable<V>> {
+public class KruskalMST<K extends Comparable<K>,V extends IInfoVertex> {
 	private double weight;
 	private Queue<Edge<Double>> mst;
 	public KruskalMST(Graph<K,V,Double> G)

@@ -4,7 +4,7 @@ import java.util.Iterator;
 import model.data_structures.Edge;
 import model.data_structures.IndexMinPQ;
 
-public class PrimMST<K extends Comparable<K>,V extends Comparable<V>> {
+public class PrimMST<K extends Comparable<K>,V extends IInfoVertex> {
 	private Edge<Double>[] edgeTo; // shortest edge from tree vertex
 	private double[] distTo; // distTo[w] = edgeTo[w].weight()
 	private boolean[] marked; // true if v on tree

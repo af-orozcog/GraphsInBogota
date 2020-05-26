@@ -5,33 +5,37 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import model.Comparendo;
-import model.data_structures.ILinkedList;
-import model.data_structures.LinkedList;
-import model.data_structures.Node;
-import model.logic.Modelo;
-import view.View;
+import model.data_structures.Dijkstra;
+import model.data_structures.Edge;
+import model.data_structures.Graph;
+import model.data_structures.KruskalMST;
+import model.data_structures.ORArray;
+
 
 public class Controller {
 
 	/* Instancia del Modelo*/
-	private Modelo modelo;
+	//private Modelo modelo;
 	
 	/* Instancia de la Vista*/
-	private View view;
+	//private View view;
+	
+	Graph grafo = new Graph();
+	
 	
 	private Comparable<Comparendo>[] consulta;
 	/**
 	 * Crear la vista y el modelo del proyecto
 	 * @param capacidad tamaNo inicial del arreglo
 	 */
-	public Controller ()
+	/*public Controller ()
 	{
 		view = new View();
 		modelo = new Modelo();
 	
 		
-	}
-		
+	}*/
+	/*	
 	public void run() 
 	{
 		Scanner lector = new Scanner(System.in);
@@ -149,9 +153,35 @@ public class Controller {
 						System.out.println("No se ha realizado la consulta");
 					}
 					break;	
-		
 			}
 		}
 		
-	}	
+	}*/
+	
+	
+	public void CaminoDistanciaMinima1A(int idVertice1, int idVertice2) {
+		Dijkstra caminos = new Dijkstra(this.grafo,grafo.translateInverse(idVertice1),false);
+		System.out.println("La distancia más corta entre ambos puntos es: "+ caminos.distance(grafo.translateInverse(idVertice2)));
+		ORArray<Edge<Double>> paint = caminos.journey(grafo.translateInverse(idVertice2));
+		//TODO falta pintar mi doggo
+	}
+	
+	public void CaminoDistanciaMinima1B(int idVertice1, int idVertice2) {
+		Dijkstra caminos = new Dijkstra(this.grafo,grafo.translateInverse(idVertice1),true);
+		System.out.println("La distancia más corta entre ambos puntos es, según numero de infracciones: "+ caminos.distance(grafo.translateInverse(idVertice2)));
+		ORArray<Edge<Double>> paint = caminos.journey(grafo.translateInverse(idVertice2));
+		//TODO falta pintar mi doggo
+	}
+	
+	public ORArray<Edge<Double>> MST() {
+		KruskalMST arbol = new KruskalMST(grafo);
+		ORArray<Edge<Double>> arcos = new ORArray<Edge<Double>>();
+		Iterable<Edge<Double>> recorrer = arbol.edges();
+		for(Edge<Double> va : recorrer) 
+			arcos.add(va);
+		return arcos;
+	}
+	
+	
+	
 }

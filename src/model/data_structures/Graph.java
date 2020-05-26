@@ -4,7 +4,7 @@ import java.util.Iterator;
 import model.data_structures.ORArray;
 import model.data_structures.Queue;
 import model.data_structures.Edge;
-public class Graph <K extends Comparable<K>,V extends Comparable<V>,A extends Comparable<A>> {
+public class Graph <K extends Comparable<K>,V extends IInfoVertex,A extends Comparable<A>> {
 
 	private int V; // number of vertices
 	
@@ -18,7 +18,7 @@ public class Graph <K extends Comparable<K>,V extends Comparable<V>,A extends Co
 	
 	private ORArray<V> info;
 	
-	private IndexMaxPQ<V> ordered;
+	//private IndexMaxPQ<V> ordered;
 	
 	public Graph()
 	{
@@ -184,16 +184,42 @@ public class Graph <K extends Comparable<K>,V extends Comparable<V>,A extends Co
 		return answer;
 	}
 	
-	public void createPQ(){
-		ordered = new IndexMaxPQ(info.getSize());
-		for(int i = 0; i < info.getSize(); i++){
-			ordered.insert(i, info.getElement(i));
+	/**
+	 * 
+	 * @param graph
+	 * @param needed
+	 * @return
+	 */
+	public ORArray<Edge<Double>> pruneMST(Graph<K,V,Double> graph, HashTableSC<Integer,Integer> needed){
+		ORArray<Edge<Double>> ans = new ORArray<Edge<Double>>();
+		Integer fi = needed.keys().next();
+		boolean marked[] = new boolean[graph.V()];
+		modifiedDFS(fi,graph,needed,ans,marked);
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param t
+	 * @param graph
+	 * @param needed
+	 * @param ans
+	 * @param marked
+	 * @return
+	 */
+	private boolean modifiedDFS(int t,Graph<K,V,Double> graph, HashTableSC<Integer,Integer> needed, ORArray<Edge<Double>> ans,
+			boolean marked[]) {
+		marked[t] = true;
+		boolean ret = false;
+		if(needed.contains(t)) ret = true;
+		Iterator<K> it = graph.adj(graph.translateInverse(t));
+		while(it.hasNext()) {
+			K ad = it.next();
+			if(marked[graph.translate(ad)]) continue;
+			boolean should = modifiedDFS(graph.translate(ad), graph, needed, ans, marked);
+			if(should) ans.add(graph.getEdge(graph.translateInverse(t), ad));
 		}
+		return ret;
 	}
-	
-	public IndexMaxPQ<V> getPQ(){
-		return ordered;
-	}
-	
 	
 }
