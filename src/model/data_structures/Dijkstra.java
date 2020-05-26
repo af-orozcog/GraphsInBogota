@@ -2,7 +2,9 @@ package model.data_structures;
 
 import java.util.Iterator;
 
-public class Dijkstra<K extends Comparable<K>,V extends IInfoVertex> {
+import model.vo.VertexInfo;
+
+public class Dijkstra<K extends Comparable<K>> {
 	/**
 	 * 
 	 */
@@ -19,7 +21,7 @@ public class Dijkstra<K extends Comparable<K>,V extends IInfoVertex> {
 	private MinPQ<PairComp<Double,Integer>> pq;
 
 	
-	Graph<K,V,Double> graph;
+	Graph<K,VertexInfo,Double> graph;
 	
 	/**
 	 * 
@@ -27,7 +29,7 @@ public class Dijkstra<K extends Comparable<K>,V extends IInfoVertex> {
 	 * @param s
 	 * @param option
 	 */
-	public Dijkstra(Graph<K,V,Double> G,K s, boolean option)
+	public Dijkstra(Graph<K,VertexInfo,Double> G,K s, boolean option)
 	{
 		graph = G;
 		dad = new Integer[G.V()];

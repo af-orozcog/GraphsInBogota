@@ -4,7 +4,7 @@ import java.util.Iterator;
 import model.data_structures.ORArray;
 import model.data_structures.Queue;
 import model.data_structures.Edge;
-public class Graph <K extends Comparable<K>,V extends IInfoVertex,A extends Comparable<A>> {
+public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 
 	private int V; // number of vertices
 	
