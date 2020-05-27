@@ -1,11 +1,8 @@
 package model.vo;
-import com.teamdev.jxmaps.ControlPosition;
 import com.teamdev.jxmaps.LatLng;
 import com.teamdev.jxmaps.Map;
-import com.teamdev.jxmaps.MapOptions;
 import com.teamdev.jxmaps.MapReadyHandler;
 import com.teamdev.jxmaps.MapStatus;
-import com.teamdev.jxmaps.MapTypeControlOptions;
 import com.teamdev.jxmaps.Polyline;
 import com.teamdev.jxmaps.PolylineOptions;
 import com.teamdev.jxmaps.swing.MapView;
@@ -27,6 +24,10 @@ import java.util.Iterator;
 public class Mapa extends MapView
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
 	 * Grafo a graficar en el mapa
 	 */
 	private Graph<Integer, VertexInfo, Double> mapa;
@@ -34,6 +35,77 @@ public class Mapa extends MapView
 	 * Contructor de la clase
 	 * @param grafo2
 	 */
+	public Mapa(Graph<Integer, VertexInfo, Double> grafo2,ORArray<Edge<Double>> paint,LatLng min,LatLng max) {
+		mapa=grafo2;
+		setOnMapReadyHandler(new MapReadyHandler() 
+		{
+			@Override
+			public void onMapReady(MapStatus status) 
+			{
+				// Check if the map is loaded correctly
+				if (status == MapStatus.MAP_STATUS_OK) 
+				{
+					// Getting the associated map objec
+					final Map map = getMap();
+					
+					
+					//Contador de vertices
+					int n = 0;
+					ArrayList<Polyline> arcos = new ArrayList<Polyline>();					
+					
+					
+					//Opciones para imprimir el mapa.
+					PolylineOptions options = new PolylineOptions();
+					// Setting geodesic property value
+					options.setGeodesic(true);
+					// Setting stroke color value
+					options.setStrokeColor("#36D61C");
+					// Setting stroke opacity value
+					options.setStrokeOpacity(1.0);
+					// Setting stroke weight value
+					options.setStrokeWeight(2.0);
+					// Applying options to the polyline
+					CircleOptions op = new CircleOptions();
+					op.setFillColor("#EC2C03");
+					op.setStrokeColor("#EC2C03");
+					//op.setStrokeOpacity(1.0);
+					op.setRadius(2);
+					ArrayList<Circle> circulos = new ArrayList<Circle>();
+					for(Edge<Double> edg: paint) {
+						int one = edg.either();
+						int two = edg.other(one);
+						Coordinates onee = mapa.getInfoVertex(mapa.translateInverse(one)).getCoor();
+						Coordinates twoo = mapa.getInfoVertex(mapa.translateInverse(two)).getCoor();						
+						double lat1 = onee.lat;
+						double lon1 = onee.lon;
+
+						double lat2 = twoo.lat;
+						double lon2 = twoo.lon;
+
+						if(n <paint.getSize() && lat1 >= min.getLat() && lat1 <= max.getLat() && lon1 >= min.getLng() && lon1 <= max.getLng()
+								&& lat2 >= min.getLat() && lat2 <= max.getLat() && lon2 >= min.getLng() && lon2 <= max.getLng()) 
+						{
+							LatLng[] path = {new LatLng(lat1,lon1),new LatLng(lat2,lon2)};
+							arcos.add(new Polyline(map));
+							arcos.get(arcos.size()-1).setPath(path);
+							arcos.get(arcos.size()-1).setOptions(options);
+							circulos.add(new Circle(map));
+							circulos.get(circulos.size()-1).setCenter(new LatLng(lat1,lon1));
+							circulos.get(circulos.size()-1).setOptions(op);
+							circulos.add(new Circle(map));
+							circulos.get(circulos.size()-1).setCenter(new LatLng(lat2,lon2));
+							circulos.get(circulos.size()-1).setOptions(op);
+							n++;
+						}
+					}
+					map.fitBounds(new LatLngBounds(min,max));
+					// Setting initial zoom value
+					map.setZoom(14);
+				}
+			}
+		});
+	}
+
 	public Mapa(Graph<Integer, VertexInfo, Double> grafo2,LatLng min,LatLng max,Boolean hacerSoloVertices, Graph<Long, VertexInfo, Double> pGrafoAdicional) 
 	{
 		mapa = grafo2;
@@ -74,6 +146,7 @@ public class Mapa extends MapView
 
 						while(colaArcos.hasNext()) 
 						{
+
 							Edge<Double> arc = colaArcos.next();
 							VertexInfo info1=(VertexInfo)mapa.getInfoVertex(mapa.translateInverse(arc.either()));
 							double lat1 = info1.getCoordinates().lat;
@@ -81,11 +154,13 @@ public class Mapa extends MapView
 							VertexInfo info2=(VertexInfo)mapa.getInfoVertex(mapa.translateInverse(arc.other(arc.either())));
 
 							double lat2 = info2.getCoordinates().lat;
-							double lon2 = info2.getCoordinates().lat;
+							double lon2 = info2.getCoordinates().lon;
 
-							if(n <2000&& lat1 >= min.getLat() && lat1 <= max.getLat() && lon1 >= min.getLng() && lon1 <= max.getLng()
+
+							if(n <5000 && lat1 >= min.getLat() && lat1 <= max.getLat() && lon1 >= min.getLng() && lon1 <= max.getLng()
 									&& lat2 >= min.getLat() && lat2 <= max.getLat() && lon2 >= min.getLng() && lon2 <= max.getLng()) 
 							{
+
 								LatLng[] path = {new LatLng(lat1,lon1),new LatLng(lat2,lon2)};
 								arcos.add(new Polyline(map));
 								arcos.get(arcos.size()-1).setPath(path);
@@ -130,10 +205,10 @@ public class Mapa extends MapView
 								VertexInfo info2=(VertexInfo)mapa.getInfoVertex(mapa.translateInverse(arc.other(arc.either())));
 
 								double lat2 = info2.getCoordinates().lat;
-								double lon2 = info2.getCoordinates().lat;
+								double lon2 = info2.getCoordinates().lon;
 
 
-								if(n <2000&& lat1 >= min.getLat() && lat1 <= max.getLat() && lon1 >= min.getLng() && lon1 <= max.getLng()
+								if(n <mapa.V()&& lat1 >= min.getLat() && lat1 <= max.getLat() && lon1 >= min.getLng() && lon1 <= max.getLng()
 										&& lat2 >= min.getLat() && lat2 <= max.getLat() && lon2 >= min.getLng() && lon2 <= max.getLng()) 
 								{
 									LatLng[] path = {new LatLng(lat1,lon1),new LatLng(lat2,lon2)};
@@ -182,7 +257,7 @@ public class Mapa extends MapView
 							double lat1 = info1.getCoordinates().lat;
 							double lon1 = info1.getCoordinates().lon;
 
-							if(n <2000&& lat1 >= min.getLat() && lat1 <= max.getLat() && lon1 >= min.getLng() && lon1 <= max.getLng()) 
+							if(n <mapa.E()&& lat1 >= min.getLat() && lat1 <= max.getLat() && lon1 >= min.getLng() && lon1 <= max.getLng()) 
 							{
 								circulos.add(new Circle(map));
 								circulos.get(circulos.size()-1).setCenter(new LatLng(lat1,lon1));
@@ -224,7 +299,7 @@ public class Mapa extends MapView
 								VertexInfo info2=(VertexInfo)mapa.getInfoVertex(mapa.translateInverse(arc.other(arc.either())));
 
 								double lat2 = info2.getCoordinates().lat;
-								double lon2 = info2.getCoordinates().lat;
+								double lon2 = info2.getCoordinates().lon;
 
 								if(n <2000&& lat1 >= min.getLat() && lat1 <= max.getLat() && lon1 >= min.getLng() && lon1 <= max.getLng()
 										&& lat2 >= min.getLat() && lat2 <= max.getLat() && lon2 >= min.getLng() && lon2 <= max.getLng()) 
@@ -247,7 +322,7 @@ public class Mapa extends MapView
 						//					System.out.println("Numero de arcos graficados:: "+n);
 						map.fitBounds(new LatLngBounds(min,max));
 						// Setting initial zoom value
-						map.setZoom(5);
+						map.setZoom(15);
 					}
 				}
 			}

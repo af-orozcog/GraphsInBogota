@@ -28,21 +28,23 @@ public class Controller {
 
 	/* Instancia del Modelo*/
 	//private Modelo modelo;
-	
+
 	/* Instancia de la Vista*/
 	//private View view;
-	
+
 	Graph<Integer,VertexInfo,Double> grafo = new Graph<Integer,VertexInfo,Double>();
-	
+
 	ORArray<PairComp<Integer, Integer>> infraccionesNodo;
-	
+
 	ORArray<Integer> nodosConEstaciones; 
-	
+
 	private Comparable<Comparendo>[] consulta;
 	HashTableLP<Integer,Comparendo> comparendos;
 
 	CargaGrafo cargaDatos;
-	
+	LatLng pequeño;
+	LatLng grande;
+
 	/**
 	 * Crear la vista y el modelo del proyecto
 	 * @param capacidad tamaNo inicial del arreglo
@@ -53,6 +55,8 @@ public class Controller {
 		grafo=cargaDatos.g;
 		nodosConEstaciones=cargaDatos.nodosConEstaciones;
 		comparendos=cargaDatos.comparendos;
+		pequeño=new LatLng(cargaDatos.latmin,cargaDatos.lonmin);
+		grande=new LatLng(cargaDatos.latmax,cargaDatos.lonmax);
 	}	
 	public void run() 
 	{
@@ -65,56 +69,57 @@ public class Controller {
 
 			int option = lector.nextInt();
 			switch(option){
-				case 1:
-					System.out.println("-----------------------------------------------------------------------");
-					System.out.println("-----------------------------------------------------------------------");
-					System.out.println("-----------------------------------------------------------------------");
-					System.out.println("Por favor digite el nodo desde donde quiere partir: ");
-					int from = lector.nextInt();
-					System.out.println("Por favor digite el nodo al que quiere llegar: ");
-					int to = lector.nextInt();
-				    long start = System.currentTimeMillis();
-				    CaminoDistanciaMinima1A(from,to);
-				    long end = System.currentTimeMillis();
-				    System.out.println("el tiempo que toma al algoritmo encontrar la respuesta y dibujar el camino"
-				    		+ "es: " + (end-start));
-				    System.out.println("-----------------------------------------------------------------------");
-					System.out.println("-----------------------------------------------------------------------");
-					System.out.println("-----------------------------------------------------------------------");
-					break;	
-				case 2:
-					PoliceStationComponents();
-					break;
-				case 3:
-					System.out.println("-----------------------------------------------------------------------");
-					System.out.println("-----------------------------------------------------------------------");
-					System.out.println("-----------------------------------------------------------------------");
-					System.out.println("Por favor digite el numero de comparendos de mayor gravedad que se quiere"
-							+ "utilizar: ");
-					int m = lector.nextInt();
-					
-					break;
-				case 4:
-					System.out.println("YA ESTÁ DIBUJANDO HIJUEPUTA VIDA");
-					LatLng pequeño=new LatLng(cargaDatos.latmin,cargaDatos.lonmin);
-					LatLng grande=new LatLng(cargaDatos.latmax,cargaDatos.lonmax);
-					generarMapaGrafo(grafo, pequeño, grande, false, null);
+			case 1:
+				System.out.println("-----------------------------------------------------------------------");
+				System.out.println("-----------------------------------------------------------------------");
+				System.out.println("-----------------------------------------------------------------------");
+				System.out.println("Por favor digite el nodo desde donde quiere partir: ");
+				int from = lector.nextInt();
+				System.out.println("Por favor digite el nodo al que quiere llegar: ");
+				int to = lector.nextInt();
+				long start = System.currentTimeMillis();
+				CaminoDistanciaMinima1A(from,to);
+				long end = System.currentTimeMillis();
+				System.out.println("el tiempo que toma al algoritmo encontrar la respuesta y dibujar el camino"
+						+ "es: " + (end-start));
+				System.out.println("-----------------------------------------------------------------------");
+				System.out.println("-----------------------------------------------------------------------");
+				System.out.println("-----------------------------------------------------------------------");
+				break;	
+			case 2:
+				PoliceStationComponents();
+				break;
+			case 3:
+				System.out.println("-----------------------------------------------------------------------");
+				System.out.println("-----------------------------------------------------------------------");
+				System.out.println("-----------------------------------------------------------------------");
+				System.out.println("Por favor digite el numero de comparendos de mayor gravedad que se quiere"
+						+ "utilizar: ");
+				int m = lector.nextInt();
+
+				break;
+			case 4:
+
 			}
 		}
-		
+
 	}
-	
+
 	public void generarMapaGrafo(Graph<Integer, VertexInfo, Double> grafo2,LatLng min,LatLng max,boolean pSinoVertices, Graph<Long, VertexInfo, Double> pGrafoAdicional)
 	{
 		Mapa x=new Mapa(grafo2,min,max,pSinoVertices, pGrafoAdicional);
 		Mapa.graficarMapa(x);
 	}
 
-	
-	
-	
-	
-	
+	public void generarMapaAux(Graph<Integer, VertexInfo, Double> grafo2,ORArray<Edge<Double>> paint, LatLng min,LatLng max)
+	{
+		Mapa x=new Mapa(grafo2,paint,min,max);
+		Mapa.graficarMapa(x);
+	}
+
+
+
+
 	/**
 	 * 
 	 * @param idVertice1
@@ -127,15 +132,10 @@ public class Controller {
 		System.out.println("La distancia mï¿½s corta entre ambos puntos es: "+ caminos.distance(grafo.translateInverse(idVertice2)));
 		if(caminos.distance(grafo.translateInverse(idVertice2)) == Double.MAX_VALUE)return;
 		ORArray<Edge<Double>> paint = caminos.journey(grafo.translateInverse(idVertice2));
-		for(Edge<Double> edg: paint) {
-			int one = edg.either();
-			int two = edg.other(one);
-			Coordinates onee = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
-			Coordinates twoo = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
-		}
-		//TODO falta pintar mi doggo
+		System.out.println(paint.getSize()+"HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+		generarMapaAux(grafo,paint,pequeño,grande);
 	}
-	
+
 	/**
 	 * 
 	 * @param idVertice1
@@ -148,15 +148,9 @@ public class Controller {
 		System.out.println("La distancia mï¿½s corta entre ambos puntos es, segï¿½n numero de infracciones: "+ caminos.distance(grafo.translateInverse(idVertice2)));
 		if(caminos.distance(grafo.translateInverse(idVertice2)) == Double.MAX_VALUE)return;
 		ORArray<Edge<Double>> paint = caminos.journey(grafo.translateInverse(idVertice2));
-		for(Edge<Double> edg: paint) {
-			int one = edg.either();
-			int two = edg.other(one);
-			Coordinates onee = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
-			Coordinates twoo = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
-		}
-		//TODO falta pintar mi doggo
+		generarMapaAux(grafo,paint,pequeño,grande);
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -177,7 +171,7 @@ public class Controller {
 		}
 		return g;
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -202,7 +196,7 @@ public class Controller {
 		HashTableSC<Integer, Integer> needed = new HashTableSC<Integer, Integer>(200);
 		for(int i = need.getSize()-1, j = 0; i > -1 && j < m;--i,++j)
 			needed.put(g.translate(need.getElement(i).getSecond()), 1);
-		
+
 		ORArray<Edge<Double>> aPintar = new ORArray<Edge<Double>>();
 		while(needed.getSize() != 0) {
 			ORArray<Edge<Double>> temp = Graph.pruneMST(g, needed);
@@ -213,15 +207,10 @@ public class Controller {
 		for(Edge<Double> edg: aPintar) 
 			costo += edg.getInfo();
 		System.out.println("el costo del arbol es: "  + costo);
-		for(Edge<Double> edg: aPintar) {
-			int one = edg.either();
-			int two = edg.other(one);
-			Coordinates onee = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
-			Coordinates twoo = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
-		}
+		generarMapaAux(grafo,aPintar,pequeño,grande);
 	}
-	
-	
+
+
 	/**
 	 * 
 	 */
@@ -254,7 +243,7 @@ public class Controller {
 			Coordinates twoo = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param m
@@ -266,7 +255,7 @@ public class Controller {
 				return o1.getFirst().compareTo(o2.getFirst());
 			}
 		};
-		
+
 		infraccionesNodo.sort(comp);
 		HashTableSC<Integer, Integer> needed = new HashTableSC<Integer, Integer>(200);
 		for(int i = infraccionesNodo.getSize()-1, j = 0; i > -1 && j < m;--i,++j)
@@ -292,7 +281,7 @@ public class Controller {
 		}
 		//TODO pintelo mi doggo
 	}
-	
+
 	/**
 	 * 
 	 */
