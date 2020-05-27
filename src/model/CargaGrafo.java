@@ -33,7 +33,6 @@ public class CargaGrafo {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 	public static void main(String[] args) throws IOException {
 		//		File file=new File("./data/Vertices.txt");    //creates a new file instance  

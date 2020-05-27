@@ -44,11 +44,11 @@ public class Controller {
 	public Controller ()
 	{
 		cargaDatos = new CargaGrafo();
-		try {
-			cargaDatos.main(null);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		Iterator<Edge<Double>>arcos=cargaDatos.g.edges().iterator();
+		while(arcos.hasNext())
+		{
+			Edge jaja=arcos.next();
+			System.out.println(jaja.getInfo());
 		}
 	}	
 	public void run() 
