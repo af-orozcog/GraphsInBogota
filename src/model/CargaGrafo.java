@@ -1,11 +1,9 @@
 package model;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.Savepoint;
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -15,8 +13,8 @@ import org.json.simple.parser.JSONParser;
 
 import com.google.gson.Gson;
 
-import model.data_structures.Edge;
 import model.data_structures.Graph;
+import model.data_structures.ORArray;
 import model.vo.Coordinates;
 import model.vo.PoliceStation;
 import model.vo.VertexInfo;
@@ -24,6 +22,8 @@ import model.vo.VertexInfo;
 public class CargaGrafo {
 
 	public static Graph<Integer,VertexInfo,Double> g = new Graph<Integer,VertexInfo,Double>();
+	public static ORArray<Integer> nodosConEstaciones=new ORArray<Integer>(); 
+
 	public CargaGrafo()
 	{
 		//		cargarGrafo();
@@ -104,7 +104,6 @@ public class CargaGrafo {
 		//				String url = "./data/grafo.json";
 		//				try{
 		//					FileWriter fileWriter = new FileWriter(new File(url), true);
-		//					FileWriter fileWriter2 = new FileWriter(new File("./data/grafoGRANDE.json"), true);
 		//		
 		//					Iterator<Integer> iter=g.vertices();
 		//					while (iter.hasNext()) {
@@ -112,30 +111,11 @@ public class CargaGrafo {
 		//						VertexInfo v2 =  (VertexInfo) g.getInfoVertex(v);
 		//						fileWriter.write(gson.toJson(v2));
 		//					}
-		//					fileWriter2.write(gson.toJson(g));
-		//					fileWriter2.close();
 		//					fileWriter.close();
 		//				}
 		//				catch(Exception e){System.err.println("error en la escritura del archivo JSON");
 		//				System.out.println(e.getMessage());}
 		//				System.out.println("Escrito");
-		//				System.out.println(g.getInfoVertex(0));
-
-		//PARA CARGAR EL GRAFO GENERADO
-		//		Gson gson=new Gson();
-		//
-		//		try {
-		//
-		//			BufferedReader br = new BufferedReader(new FileReader("./data/grafoGRANDE.json"));
-		//
-		//			//convert the json string back to object
-		//			g = gson.fromJson(br, Graph.class);
-		//			System.out.println(g.getInfoVertex(0));
-		//		}
-		//		catch(Exception e)
-		//		{
-		//			e.printStackTrace();
-		//		}
 
 	}
 
@@ -226,6 +206,10 @@ public class CargaGrafo {
 				}
 
 				cont.addPoliceStation(Integer.parseInt(vertice.get("station").toString()));
+				if(!vertice.get("station").toString().equals("-1"))
+				{
+					nodosConEstaciones.add(Integer.parseInt(vertice.get("id").toString()));
+				}
 
 				Integer id = Integer.parseInt(vertice.get("id").toString());
 				g.addVertex(id, cont);

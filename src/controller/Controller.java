@@ -44,7 +44,8 @@ public class Controller {
 	public Controller ()
 	{
 		cargaDatos = new CargaGrafo();
-		grafo = cargaDatos.g;
+		grafo=cargaDatos.g;
+		nodosConEstaciones=cargaDatos.nodosConEstaciones;
 	}	
 	public void run() 
 	{
@@ -59,8 +60,9 @@ public class Controller {
 			switch(option){
 				case 1:
 					Iterator<Integer>  it = grafo.vertices();
-					int from = lector.nextInt();
-					int to = lector.nextInt();
+					int id1 = lector.nextInt();
+					int id2 = lector.nextInt();
+					System.out.println(grafo.getInfoArc(id1,id2));
 				    long start = System.currentTimeMillis();
 				    CaminoDistanciaMinima1A(from,to);
 				    long end = System.currentTimeMillis();
@@ -81,7 +83,7 @@ public class Controller {
 		ORArray<Integer> send = new ORArray<Integer>();
 		send.add(idVertice1);
 		Dijkstra caminos = new Dijkstra(this.grafo,send,false);
-		System.out.println("La distancia más corta entre ambos puntos es: "+ caminos.distance(grafo.translateInverse(idVertice2)));
+		System.out.println("La distancia mï¿½s corta entre ambos puntos es: "+ caminos.distance(grafo.translateInverse(idVertice2)));
 		ORArray<Edge<Double>> paint = caminos.journey(grafo.translateInverse(idVertice2));
 		//TODO falta pintar mi doggo
 	}
@@ -95,7 +97,7 @@ public class Controller {
 		ORArray<Integer> send = new ORArray<Integer>();
 		send.add(idVertice1);
 		Dijkstra caminos = new Dijkstra(this.grafo,send,true);
-		System.out.println("La distancia más corta entre ambos puntos es, según numero de infracciones: "+ caminos.distance(grafo.translateInverse(idVertice2)));
+		System.out.println("La distancia mï¿½s corta entre ambos puntos es, segï¿½n numero de infracciones: "+ caminos.distance(grafo.translateInverse(idVertice2)));
 		ORArray<Edge<Double>> paint = caminos.journey(grafo.translateInverse(idVertice2));
 		//TODO falta pintar mi doggo
 	}
