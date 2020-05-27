@@ -22,7 +22,11 @@ import model.vo.VertexInfo;
 public class CargaGrafo {
 
 	public static Graph<Integer,VertexInfo,Double> g = new Graph<Integer,VertexInfo,Double>();
+	public CargaGrafo()
+	{
+		cargarGrafo();
 
+	}
 	public static void main(String[] args) throws IOException {
 		//		File file=new File("./data/Vertices.txt");    //creates a new file instance  
 		//		FileReader fr=new FileReader(file);   //reads the file  
@@ -77,17 +81,22 @@ public class CargaGrafo {
 
 
 		//Para guardar el grafo
-//		cargarGrafo();
-//		saveJSON("./data/GRAFOBENDITO.json");
-
-		try {
-			loadJSON("./data/GRAFOBENDITO.json");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		cargarGrafo();
+		Iterator<Integer> iter=g.vertices();
+		while (iter.hasNext()) {
+			Integer v = (Integer) iter.next();
+			System.out.println(v);
 		}
-		
-		
+		//		saveJSON("./data/GRAFOBENDITO.json");
+
+		//		try {
+		//			loadJSON("./data/GRAFOBENDITO.json");
+		//		} catch (Exception e) {
+		//			// TODO Auto-generated catch block
+		//			e.printStackTrace();
+		//		}
+
+
 		//				System.out.println("Escribiendo");
 		//				Gson gson = new Gson();
 		//				String url = "./data/grafo.json";
