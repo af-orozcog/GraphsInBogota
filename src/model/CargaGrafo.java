@@ -21,7 +21,7 @@ import model.vo.VertexInfo;
 
 public class CargaGrafo {
 
-	static Graph g = new Graph();
+	public static Graph<Integer,VertexInfo,Double> g = new Graph<Integer,VertexInfo,Double>();
 
 	public static void main(String[] args) throws IOException {
 		//		File file=new File("./data/Vertices.txt");    //creates a new file instance  

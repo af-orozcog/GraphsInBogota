@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Scanner;
 
+import model.CargaGrafo;
 import model.Comparendo;
 import model.data_structures.Dijkstra;
 import model.data_structures.Edge;
@@ -32,18 +33,18 @@ public class Controller {
 	ORArray<Integer> nodosConEstaciones; 
 	
 	private Comparable<Comparendo>[] consulta;
+	
+	CargaGrafo cargaDatos;
+	
 	/**
 	 * Crear la vista y el modelo del proyecto
 	 * @param capacidad tamaNo inicial del arreglo
 	 */
-	/*public Controller ()
+	public Controller ()
 	{
-		view = new View();
-		modelo = new Modelo();
-	
-		
-	}*/
-	/*	
+		cargaDatos = new CargaGrafo();
+		grafo = cargaDatos.g;
+	}	
 	public void run() 
 	{
 		Scanner lector = new Scanner(System.in);
@@ -51,120 +52,23 @@ public class Controller {
 		String dato = "";
 		String respuesta = "";
 		while( !fin ){
-			view.printMenu();
+			System.out.println("Que opcion quiere hacer??? SApo doble sapo");
 
 			int option = lector.nextInt();
 			switch(option){
 				case 1:
-				    modelo = new Modelo();
-					
+					System.out.println("digito el nodo origen sapee");
+					int from = lector.nextInt();
+					System.out.println("digite el nodo destino sapeee");
+					int to = lector.nextInt();
 				    long start = System.currentTimeMillis();
-				    consulta= modelo.dearreglo();
+				    CaminoDistanciaMinima1A(from, to);
 				    long end = System.currentTimeMillis();
-				    		
-				    		
-				    view.printMessage("Tiempo de carga (seg): " + (end-start)/1000.0);
-					view.printMessage("Datos cargados: " + consulta.length + "\n");
-			   view.printMessage("Primer dato: " + consulta[0] + "\n");
-			 view.printMessage("Ultimo dato: " + consulta[1] + "\n");
-					
-				
-			
-
-				   break;
-					
-				case 2:
-					System.out.println("3. Ordenar consulta ascendentemente con ShellSort");
-					if(consulta != null)
-					{
-						long tiempo = modelo.sortingBenchmarkOptionA(consulta,
-								model.logic.Modelo.SHELLSORT );
-						System.out.println("Primeros 10 comparendos");
-						for(int i = 0; i <= 10 ;i++)
-						{
-							System.out.println("------------------------------------------------------------------------------------------------------------");
-							System.out.println(consulta[i].toString());
-							System.out.println("------------------------------------------------------------------------------------------------------------");
-
-						}
-						System.out.println("Últimos 10 comparendos");
-						for(int i = consulta.length-1; i >= (consulta.length+10) ;i--)
-						{
-							System.out.println("------------------------------------------------------------------------------------------------------------");
-							System.out.println(consulta[i].toString());
-							System.out.println("------------------------------------------------------------------------------------------------------------");
-
-						}
-						System.out.println("El ordenamiento tomó "+tiempo+" milisegundos");
-					
-			}
-			else
-			{
-				System.out.println("No se ha realizado la consulta");
-			}
-			break;
-				case 3:
-					System.out.println("4. Ordenar consulta ascendentemente usando MergeSort");
-					if(consulta != null)
-					{
-						long tiempo = modelo.sortingBenchmarkOptionA(consulta,
-								model.logic.Modelo.MERGESORT );
-						System.out.println("Primeros 10 comparendos");
-						for(int i = 0; i <= 10 ;i++)
-						{
-							System.out.println("------------------------------------------------------------------------------------------------------------");
-							System.out.println(consulta[i].toString());
-							System.out.println("------------------------------------------------------------------------------------------------------------");
-
-						}
-						System.out.println("Últimos 10 comparendos");
-						for(int i = consulta.length-1; i >= (consulta.length+10) ;i--)
-						{
-							System.out.println("------------------------------------------------------------------------------------------------------------");
-							System.out.println(consulta[i].toString());
-							System.out.println("------------------------------------------------------------------------------------------------------------");
-
-						}
-						System.out.println("El ordenamiento tomó "+tiempo+" milisegundos");
-					}
-					else
-					{
-						System.out.println("No se ha realizado la consulta");
-					}
-					break;
-
-				case 4: 
-					System.out.println("4. Ordenar consulta ascendentemente usando QuickSort");
-					if(consulta != null)
-					{
-						long tiempo = modelo.sortingBenchmarkOptionA(consulta,
-								model.logic.Modelo.QUICKSORT );
-						System.out.println("Primeros 10 comparendos");
-						for(int i = 0; i <= 10 ;i++)
-						{
-							System.out.println("------------------------------------------------------------------------------------------------------------");
-							System.out.println(consulta[i].toString());
-							System.out.println("------------------------------------------------------------------------------------------------------------");
-						}
-						System.out.println("Últimos 10 comparendos");
-						for(int i = consulta.length-1; i >= (consulta.length+10) ;i--)
-						{
-							System.out.println("------------------------------------------------------------------------------------------------------------");
-							System.out.println(consulta[i].toString());
-							System.out.println("------------------------------------------------------------------------------------------------------------");
-
-						}
-						System.out.println("El ordenamiento tomó "+tiempo+" milisegundos");
-					}
-					else
-					{
-						System.out.println("No se ha realizado la consulta");
-					}
 					break;	
 			}
 		}
 		
-	}*/
+	}
 	
 	/**
 	 * 
