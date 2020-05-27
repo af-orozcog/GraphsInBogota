@@ -14,6 +14,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import com.google.gson.Gson;
+
+import model.data_structures.Edge;
 import model.data_structures.Graph;
 import model.vo.Coordinates;
 import model.vo.PoliceStation;
@@ -24,7 +26,13 @@ public class CargaGrafo {
 	public static Graph<Integer,VertexInfo,Double> g = new Graph<Integer,VertexInfo,Double>();
 	public CargaGrafo()
 	{
-		cargarGrafo();
+		//		cargarGrafo();
+		try {
+			loadJSON("./data/GRAFOBENDITO.json");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 	public static void main(String[] args) throws IOException {
@@ -82,11 +90,6 @@ public class CargaGrafo {
 
 		//Para guardar el grafo
 		cargarGrafo();
-		Iterator<Integer> iter=g.vertices();
-		while (iter.hasNext()) {
-			Integer v = (Integer) iter.next();
-			System.out.println(v);
-		}
 		//		saveJSON("./data/GRAFOBENDITO.json");
 
 		//		try {
@@ -233,7 +236,6 @@ public class CargaGrafo {
 					Integer ady = Integer.parseInt(o2.toString());
 					if(g.getInfoVertex(ady) != null) {
 						VertexInfo segundo=(VertexInfo) g.getInfoVertex(ady);
-
 						g.addEdge(id, ady, haversine(coor, segundo.getCoordinates()));
 					}
 				}
