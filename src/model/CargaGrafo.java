@@ -5,19 +5,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Iterator;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import model.data_structures.Edge;
 import model.data_structures.Graph;
-import model.data_structures.VertexContent;
 import model.vo.Coordinates;
+import model.vo.PoliceStation;
 import model.vo.VertexInfo;
 
 public class CargaGrafo {
@@ -25,73 +19,75 @@ public class CargaGrafo {
 	static Graph g = new Graph();
 
 	public static void main(String[] args) throws IOException {
-		File file=new File("./data/Vertices.txt");    //creates a new file instance  
-		FileReader fr=new FileReader(file);   //reads the file  
-		BufferedReader br=new BufferedReader(fr);  //creates a buffering character input stream  
-		String line;
-		while((line=br.readLine())!=null)  
-		{  
-			String temp[] = line.split(",");
-			Coordinates coordenadas=new Coordinates( Double.parseDouble(temp[1]), Double.parseDouble(temp[2]));
-			VertexInfo vertexInfo=new VertexInfo(coordenadas,Integer.parseInt(temp[0]));
-			g.addVertex(Integer.parseInt(temp[0]), vertexInfo);
-		}  
-		fr.close();    //closes the stream and release the resources  
-		File file2=new File("./data/Arcos.txt");    //creates a new file instance  
-		FileReader fr2=new FileReader(file2);   //reads the file  
-		BufferedReader br2=new BufferedReader(fr2);  //creates a buffering character input stream 
-		while((line=br2.readLine())!=null)  
-		{  
-			if(line.contains("#"))
-				continue;
-			String temp[] = line.split(" ");
-			int f = Integer.parseInt(temp[0]);
-			VertexInfo informacion=(VertexInfo) g.getInfoVertex(f), informacion2;
-			Coordinates v =  (Coordinates) informacion.getCoordinates();
-			for(int i = 1; i<temp.length; ++i) {
-				int tempp = Integer.parseInt(temp[i]);
-				informacion2=(VertexInfo) g.getInfoVertex(tempp);
-				Coordinates v2 =  (Coordinates) informacion2.getCoordinates() ;
-
-				Double x1 = v.lat - v2.lat; 
-				x1 = x1*x1;
-				Double y1 = v.lon - v2.lon; 
-				y1 = y1*y1;
-				final int R = 6371; // Radio de la tierra
-
-				Double latDistance = toRad(v2.lat-v.lat);
-				Double lonDistance = toRad(v2.lon-v.lon);
-
-				Double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) + 
-						Math.cos(toRad(v.lat)) * Math.cos(toRad(v.lat)) * 
-						Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-
-				Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-				Double distance = R * c;
-				g.addEdge(f, tempp, distance);
-			}
-		}
-		br2.close();
-		cargarInfracciones();
-		
+		//		File file=new File("./data/Vertices.txt");    //creates a new file instance  
+		//		FileReader fr=new FileReader(file);   //reads the file  
+		//		BufferedReader br=new BufferedReader(fr);  //creates a buffering character input stream  
+		//		String line;
+		//		while((line=br.readLine())!=null)  
+		//		{  
+		//			String temp[] = line.split(",");
+		//			Coordinates coordenadas=new Coordinates( Double.parseDouble(temp[1]), Double.parseDouble(temp[2]));
+		//			VertexInfo vertexInfo=new VertexInfo(coordenadas,Integer.parseInt(temp[0]));
+		//			g.addVertex(Integer.parseInt(temp[0]), vertexInfo);
+		//		}  
+		//		fr.close();    //closes the stream and release the resources  
+		//		File file2=new File("./data/Arcos.txt");    //creates a new file instance  
+		//		FileReader fr2=new FileReader(file2);   //reads the file  
+		//		BufferedReader br2=new BufferedReader(fr2);  //creates a buffering character input stream 
+		//		while((line=br2.readLine())!=null)  
+		//		{  
+		//			if(line.contains("#"))
+		//				continue;
+		//			String temp[] = line.split(" ");
+		//			int f = Integer.parseInt(temp[0]);
+		//			VertexInfo informacion=(VertexInfo) g.getInfoVertex(f), informacion2;
+		//			Coordinates v =  (Coordinates) informacion.getCoordinates();
+		//			for(int i = 1; i<temp.length; ++i) {
+		//				int tempp = Integer.parseInt(temp[i]);
+		//				informacion2=(VertexInfo) g.getInfoVertex(tempp);
+		//				Coordinates v2 =  (Coordinates) informacion2.getCoordinates() ;
+		//
+		//				Double x1 = v.lat - v2.lat; 
+		//				x1 = x1*x1;
+		//				Double y1 = v.lon - v2.lon; 
+		//				y1 = y1*y1;
+		//				final int R = 6371; // Radio de la tierra
+		//
+		//				Double latDistance = toRad(v2.lat-v.lat);
+		//				Double lonDistance = toRad(v2.lon-v.lon);
+		//
+		//				Double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) + 
+		//						Math.cos(toRad(v.lat)) * Math.cos(toRad(v.lat)) * 
+		//						Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+		//
+		//				Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+		//				Double distance = R * c;
+		//				g.addEdge(f, tempp, distance);
+		//			}
+		//		}
+		//		br2.close();
+		//		cargarInfracciones();
+		cargarGrafo();
 		System.out.println("Escribiendo");
 		Gson gson = new Gson();
 		String url = "./data/grafo.json";
 		try{
 			FileWriter fileWriter = new FileWriter(new File(url), true);
-			String jsonString;
+			FileWriter fileWriter2 = new FileWriter(new File("./data/grafoGRANDE.json"), true);
+
 			Iterator<Integer> iter=g.vertices();
 			while (iter.hasNext()) {
 				Integer v = (Integer) iter.next();
 				VertexInfo v2 =  (VertexInfo) g.getInfoVertex(v);
 				fileWriter.write(gson.toJson(v2));
 			}
+			fileWriter2.write(gson.toJson(g));
+			fileWriter2.close();
 			fileWriter.close();
 		}
 		catch(Exception e){System.err.println("error en la escritura del archivo JSON");
 		System.out.println(e.getMessage());}
 		System.out.println("Escrito");
-
 	}
 
 	public static Double haversine(Coordinates v, Coordinates v2)
@@ -129,18 +125,18 @@ public class CargaGrafo {
 				Double latitud=feature.getGeometry().getCoordinates()[0];
 				Double longitud=feature.getGeometry().getCoordinates()[1];
 				Coordinates coordenada=new Coordinates(latitud,longitud); 
-				
+
 				Integer idVertice= 0;
-				
+
 				VertexInfo info =  (VertexInfo) g.getInfoVertex(idVertice);
 				Coordinates coorver=info.getCoordinates();
-				
+
 				Double minima=haversine(coordenada,coorver);
-				
-				
+
+
 				Iterator<Integer> iter=g.vertices();
-				
-				
+
+
 				while (iter.hasNext()) {
 					Integer v = (Integer) iter.next();
 					info =  (VertexInfo) g.getInfoVertex(v);
@@ -157,7 +153,7 @@ public class CargaGrafo {
 
 			VertexInfo infoC=(VertexInfo) g.getInfoVertex(0);
 			System.out.println(infoC.getInfractions());
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -168,7 +164,267 @@ public class CargaGrafo {
 		return value * Math.PI / 180;
 	}
 
+	private static void cargarGrafo()
+	{
+		Gson gson=new Gson();
+
+		try {
+
+			BufferedReader br = new BufferedReader(new FileReader("./data/grafoCompleto2.json"));
+			Vertice[] obj = gson.fromJson(br, Vertice[].class);
+
+
+			for (Vertice vertice : obj) {
+				Coordinates coordenadas=new Coordinates(vertice.lat,vertice.lon);
+				VertexInfo vertexInfo=new VertexInfo(coordenadas,vertice.indice);
+				g.addVertex(vertice.indice, vertexInfo);
+				for (Arco arco : vertice.edges) {
+					g.addEdge(arco.lFrom, arco.lTo, arco.millas);
+				}
+
+				VertexInfo actualizador=(VertexInfo) g.getInfoVertex(vertice.indice);
+
+				for(conEsta2 comp:vertice.comparendos)
+				{
+					actualizador.addInfraction(comp.properties.OBJECTID);
+				}
+
+				if(vertice.estaciones.length>0)
+				{
+					actualizador.addPoliceStation(vertice.getEstaciones()[0].properties);
+				}
+			}
+
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
 }
+
+class Vertice{
+	int indice;
+	Double lat;
+	Double lon;
+	@Override
+	public String toString() {
+		return "Vertice [indice=" + indice + ", lat=" + lat + ", lon=" + lon + ", edges=" + Arrays.toString(edges)
+		+ ", comparendos=" + Arrays.toString(comparendos) + ", estaciones=" + Arrays.toString(estaciones) + "]";
+	}
+	public int getIndice() {
+		return indice;
+	}
+	public void setIndice(int indice) {
+		this.indice = indice;
+	}
+	public Double getLat() {
+		return lat;
+	}
+	public void setLat(Double lat) {
+		this.lat = lat;
+	}
+	public Double getLon() {
+		return lon;
+	}
+	public void setLon(Double lon) {
+		this.lon = lon;
+	}
+	public Arco[] getEdges() {
+		return edges;
+	}
+	public void setEdges(Arco[] edges) {
+		this.edges = edges;
+	}
+	public conEsta2[] getComparendos() {
+		return comparendos;
+	}
+	public void setComparendos(conEsta2[] comparendos) {
+		this.comparendos = comparendos;
+	}
+	public conEsta[] getEstaciones() {
+		return estaciones;
+	}
+	public void setEstaciones(conEsta[] estaciones) {
+		this.estaciones = estaciones;
+	}
+	Arco[] edges;
+	conEsta2[] comparendos;
+	conEsta[] estaciones;
+}
+class Arco{
+	Double millas;
+	int lFrom;
+	@Override
+	public String toString() {
+		return "Arco [millas=" + millas + ", IFrom=" + lFrom + ", ITo=" + lTo + "]";
+	}
+	public Double getMillas() {
+		return millas;
+	}
+	public void setMillas(Double millas) {
+		this.millas = millas;
+	}
+	public int getlFrom() {
+		return lFrom;
+	}
+	public void setlFrom(int lFrom) {
+		this.lFrom = lFrom;
+	}
+	public int getlTo() {
+		return lTo;
+	}
+	public void setlTo(int lTo) {
+		this.lTo = lTo;
+	}
+	int lTo;
+}
+
+class conEsta2{
+	String type;
+	@Override
+	public String toString() {
+		return "conEsta2 [type=" + type + ", geometry=" + geometry + ", properties=" + properties + "]";
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public Geometrias2 getGeometry() {
+		return geometry;
+	}
+	public void setGeometry(Geometrias2 geometry) {
+		this.geometry = geometry;
+	}
+	public Comparendo getProperties() {
+		return properties;
+	}
+	public void setProperties(Comparendo properties) {
+		this.properties = properties;
+	}
+	Geometrias2 geometry;
+	Comparendo properties;
+}
+
+class Geometrias2
+{
+	String type;
+	Double[] coordinates;
+	@Override
+	public String toString() {
+		return "Geometrias2 [type=" + type + ", coordinates=" + Arrays.toString(coordinates) + "]";
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public Double[] getCoordinates() {
+		return coordinates;
+	}
+	public void setCoordinates(Double[] coordinates) {
+		this.coordinates = coordinates;
+	}
+}
+
+
+
+class conEsta{
+	String type;
+	int id;
+	@Override
+	public String toString() {
+		return "conEsta [type=" + type + ", id=" + id + ", geometry=" + geometry + ", properties=" + properties + "]";
+	}
+	Geometrias geometry;
+	PoliceStation properties;
+
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public Geometrias getGeometry() {
+		return geometry;
+	}
+	public void setGeometry(Geometrias geometry) {
+		this.geometry = geometry;
+	}
+	public PoliceStation getProperties() {
+		return properties;
+	}
+	public void setProperties(PoliceStation properties) {
+		this.properties = properties;
+	}
+}
+
+class Geometrias
+{
+	String type;
+	Double[] coordinates;
+	@Override
+	public String toString() {
+		return "Geometrias [type=" + type + ", coordinates=" + Arrays.toString(coordinates) + "]";
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public Double[] getCoordinates() {
+		return coordinates;
+	}
+	public void setCoordinates(Double[] coordinates) {
+		this.coordinates = coordinates;
+	}
+
+
+}
+
+class Estacion{
+	Double EPOLONGITU;
+	Double EPOLATITUD;
+	int OBJECTID;
+	String EPODESCRIP;
+	String EPODIR_SITIO;
+	String EPOSERVICIO;
+	String EPOHORARIO;
+	String EPOTELEFON;
+	String EPOIULOCAL;
+	@Override
+	public String toString() {
+		return "Estacion [EPOLONGITU=" + EPOLONGITU + ", EPOLATITUD=" + EPOLATITUD + ", OBJECTID=" + OBJECTID
+				+ ", EPODESCRIP=" + EPODESCRIP + ", EPODIR_SITIO=" + EPODIR_SITIO + ", EPOSERVICIO=" + EPOSERVICIO
+				+ ", EPOHORARIO=" + EPOHORARIO + ", EPOTELEFON=" + EPOTELEFON + ", EPOIULOCAL=" + EPOIULOCAL + "]";
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class Listado {
 	Informacion listado;
 	public Informacion getInfo()

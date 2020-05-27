@@ -2,8 +2,24 @@ package model.vo;
 
 public class PoliceStation {
 	
+	@Override
+	public String toString() {
+		return "PoliceStation [coor=" + coor + ", OBJECTID=" + OBJECTID + ", id=" + id + ", EPOCOD_PLAN=" + EPOCOD_PLAN
+				+ ", EPOCOD_ENT=" + EPOCOD_ENT + ", EPOCOD_PROY=" + EPOCOD_PROY + ", EPOANIO_GEO=" + EPOANIO_GEO
+				+ ", EPOFECHA_INI=" + EPOFECHA_INI + ", EPOFECHA_FIN=" + EPOFECHA_FIN + ", EPODESCRIP=" + EPODESCRIP
+				+ ", EPOEST_PROY=" + EPOEST_PROY + ", EPOINTERV_ESP=" + EPOINTERV_ESP + ", EPODIR_SITIO=" + EPODIR_SITIO
+				+ ", EPOCOD_SITIO=" + EPOCOD_SITIO + ", EPOLATITUD=" + EPOLATITUD + ", EPOLONGITU=" + EPOLONGITU
+				+ ", EPOSERVICIO=" + EPOSERVICIO + ", EPOHORARIO=" + EPOHORARIO + ", EPOTELEFON=" + EPOTELEFON
+				+ ", EPOCELECTR=" + EPOCELECTR + ", EPOPWEB=" + EPOPWEB + ", EPOIUUPLAN=" + EPOIUUPLAN + ", EPOIUSCATA="
+				+ EPOIUSCATA + ", EPOIULOCAL=" + EPOIULOCAL + ", EPOEASOCIA=" + EPOEASOCIA + ", EPOFUNCION="
+				+ EPOFUNCION + ", EPOTEQUIPA=" + EPOTEQUIPA + ", EPONOMBRE=" + EPONOMBRE + ", EPOIDENTIF=" + EPOIDENTIF
+				+ ", EPOFECHA_C=" + EPOFECHA_C + "]";
+	}
+
 	private  Coordinates coor;
-	
+
+	private int OBJECTID;
+
 	private Long id;
 	
 	private int EPOCOD_PLAN;
