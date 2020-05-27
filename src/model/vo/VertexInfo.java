@@ -22,7 +22,7 @@ public class VertexInfo implements IInfoVertex{
 	/**
 	 * la estacion de policia que puede tener asociado
 	 */
-	private PoliceStation policeStation;
+	private int policeStation;
 	
 	
 	private Integer id;
@@ -38,6 +38,42 @@ public class VertexInfo implements IInfoVertex{
 		id=pId;
 	}
 	
+	public Coordinates getCoor() {
+		return coor;
+	}
+
+	public void setCoor(Coordinates coor) {
+		this.coor = coor;
+	}
+
+	public Double getAverage() {
+		return average;
+	}
+
+	public void setAverage(Double average) {
+		this.average = average;
+	}
+
+	public int getPoliceStation() {
+		return policeStation;
+	}
+
+	public void setPoliceStation(int policeStation) {
+		this.policeStation = policeStation;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public void setInfractions(ORArray<Integer> infractions) {
+		this.infractions = infractions;
+	}
+
 	/**
 	 * 
 	 * @param id
@@ -51,7 +87,7 @@ public class VertexInfo implements IInfoVertex{
 	 * 
 	 * @param policeStation
 	 */
-	public void addPoliceStation(PoliceStation policeStation) {
+	public void addPoliceStation(int policeStation) {
 		this.policeStation = policeStation;
 	}
 	

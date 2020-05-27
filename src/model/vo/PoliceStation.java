@@ -20,6 +20,14 @@ public class PoliceStation {
 
 	private int OBJECTID;
 
+	public int getOBJECTID() {
+		return OBJECTID;
+	}
+
+	public void setOBJECTID(int oBJECTID) {
+		OBJECTID = oBJECTID;
+	}
+
 	private Long id;
 	
 	private int EPOCOD_PLAN;

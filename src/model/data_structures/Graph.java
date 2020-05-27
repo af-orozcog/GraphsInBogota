@@ -7,6 +7,12 @@ import model.vo.VertexInfo;
 import model.data_structures.Edge;
 public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 
+	@Override
+	public String toString() {
+		return "Graph [V=" + V + ", E=" + E + ", adj=" + adj + ", st=" + st + ", stReverse=" + stReverse + ", info="
+				+ info + "]";
+	}
+
 	private int V; // number of vertices
 	
 	private int E; // number of edges

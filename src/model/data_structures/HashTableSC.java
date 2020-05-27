@@ -1,5 +1,6 @@
 package model.data_structures;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 public class HashTableSC<K extends Comparable<K>, V> implements ITablaHash<K,V>{
@@ -95,6 +96,11 @@ public class HashTableSC<K extends Comparable<K>, V> implements ITablaHash<K,V>{
 	//---------------------------------------------------------------//
 	//--------------------------M�todos------------------------------//
 	//---------------------------------------------------------------//
+
+	@Override
+	public String toString() {
+		return "HashTableSC [m=" + m + ", size=" + size + ", rehash=" + rehash + ", st=" + Arrays.toString(st) + "]";
+	}
 
 	/**
 	 * M�todo que permite dispersar las llaves seg�n el hashCode generado por Java

@@ -5,8 +5,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.Savepoint;
 import java.util.Arrays;
 import java.util.Iterator;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import com.google.gson.Gson;
 import model.data_structures.Graph;
@@ -67,27 +72,61 @@ public class CargaGrafo {
 		//		}
 		//		br2.close();
 		//		cargarInfracciones();
-		cargarGrafo();
-		System.out.println("Escribiendo");
-		Gson gson = new Gson();
-		String url = "./data/grafo.json";
-		try{
-			FileWriter fileWriter = new FileWriter(new File(url), true);
-			FileWriter fileWriter2 = new FileWriter(new File("./data/grafoGRANDE.json"), true);
 
-			Iterator<Integer> iter=g.vertices();
-			while (iter.hasNext()) {
-				Integer v = (Integer) iter.next();
-				VertexInfo v2 =  (VertexInfo) g.getInfoVertex(v);
-				fileWriter.write(gson.toJson(v2));
-			}
-			fileWriter2.write(gson.toJson(g));
-			fileWriter2.close();
-			fileWriter.close();
-		}
-		catch(Exception e){System.err.println("error en la escritura del archivo JSON");
-		System.out.println(e.getMessage());}
-		System.out.println("Escrito");
+
+
+
+		//Para guardar el grafo
+		cargarGrafo();
+		saveJSON("./data/GRAFOBENDITO.json");
+
+//		try {
+//			loadJSON("./data/GRAFOBENDITO.json");
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		saveJSON("./data/GRAFOBENDITO.json");
+		
+		
+		//				System.out.println("Escribiendo");
+		//				Gson gson = new Gson();
+		//				String url = "./data/grafo.json";
+		//				try{
+		//					FileWriter fileWriter = new FileWriter(new File(url), true);
+		//					FileWriter fileWriter2 = new FileWriter(new File("./data/grafoGRANDE.json"), true);
+		//		
+		//					Iterator<Integer> iter=g.vertices();
+		//					while (iter.hasNext()) {
+		//						Integer v = (Integer) iter.next();
+		//						VertexInfo v2 =  (VertexInfo) g.getInfoVertex(v);
+		//						fileWriter.write(gson.toJson(v2));
+		//					}
+		//					fileWriter2.write(gson.toJson(g));
+		//					fileWriter2.close();
+		//					fileWriter.close();
+		//				}
+		//				catch(Exception e){System.err.println("error en la escritura del archivo JSON");
+		//				System.out.println(e.getMessage());}
+		//				System.out.println("Escrito");
+		//				System.out.println(g.getInfoVertex(0));
+
+		//PARA CARGAR EL GRAFO GENERADO
+		//		Gson gson=new Gson();
+		//
+		//		try {
+		//
+		//			BufferedReader br = new BufferedReader(new FileReader("./data/grafoGRANDE.json"));
+		//
+		//			//convert the json string back to object
+		//			g = gson.fromJson(br, Graph.class);
+		//			System.out.println(g.getInfoVertex(0));
+		//		}
+		//		catch(Exception e)
+		//		{
+		//			e.printStackTrace();
+		//		}
+
 	}
 
 	public static Double haversine(Coordinates v, Coordinates v2)
@@ -109,6 +148,96 @@ public class CargaGrafo {
 		Double distance = R * c;
 		return distance;
 	}
+
+
+
+
+	private static void saveJSON(String rutaArchivo) {
+		JSONArray grafo = new JSONArray();
+		Iterator<Integer> it1 = g.vertices();
+		while(it1.hasNext()) {
+			Integer id1 = it1.next();	
+			VertexInfo info= (VertexInfo) g.getInfoVertex(id1);
+			Coordinates coor=info.getCoordinates();
+			JSONObject vertice = new JSONObject();
+			vertice.put("id", id1);
+			vertice.put("lat", coor.lat);
+			vertice.put("lon", coor.lon);
+
+			Iterator<Integer> it2 = g.adj(id1);
+			JSONArray adj = new JSONArray();
+			while(it2.hasNext()) {
+				adj.add(it2.next().toString());
+			}
+			vertice.put("adj", adj);
+
+			JSONArray infractions = new JSONArray();
+			Iterator<Integer> it3 = info.getInfractions().iterator();
+			while(it3.hasNext()) {
+				infractions.add(it3.next().toString());
+			}
+			vertice.put("infractions", infractions);
+			vertice.put("station", info.getPoliceStation());
+			grafo.add(vertice);
+		}
+		try (FileWriter file = new FileWriter(rutaArchivo)) {
+
+			file.write(grafo.toJSONString());
+			file.flush();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+
+
+
+	public static void loadJSON(String rutaArchivo) throws Exception
+	{
+		try {
+			FileReader nm = new FileReader(rutaArchivo);
+			JSONParser parser = new JSONParser();
+			JSONArray array = (JSONArray) parser.parse(nm);
+			for(Object o1 : array) {
+				JSONObject vertice = (JSONObject) o1;
+				Coordinates coor = new Coordinates(
+						Double.parseDouble(vertice.get("lat").toString()), 
+						Double.parseDouble(vertice.get("lon").toString()));
+
+				VertexInfo cont = new VertexInfo(coor,Integer.parseInt(vertice.get("id").toString()));
+
+				JSONArray inf = (JSONArray) vertice.get("infractions");
+
+
+				for(Object o2 : inf) {
+					Integer infra = Integer.parseInt(o2.toString());
+					cont.addInfraction(infra);;
+				}
+
+				cont.addPoliceStation(Integer.parseInt(vertice.get("station").toString()));
+
+				Integer id = Integer.parseInt(vertice.get("id").toString());
+				g.addVertex(id, cont);
+
+				JSONArray adj = (JSONArray) vertice.get("adj");
+				for(Object o2 : adj) {
+					Integer ady = Integer.parseInt(o2.toString());
+					if(g.getInfoVertex(ady) != null) {
+						VertexInfo segundo=(VertexInfo) g.getInfoVertex(ady);
+
+						g.addEdge(id, ady, haversine(coor, segundo.getCoordinates()));
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();	
+		}
+	}
+
+
+
 
 	private static void cargarInfracciones()
 	{	
@@ -191,7 +320,12 @@ public class CargaGrafo {
 
 				if(vertice.estaciones.length>0)
 				{
-					actualizador.addPoliceStation(vertice.getEstaciones()[0].properties);
+					actualizador.addPoliceStation(vertice.getEstaciones()[0].properties.getOBJECTID());
+				}
+				else
+				{
+					actualizador.addPoliceStation(-1);
+
 				}
 			}
 
@@ -201,7 +335,6 @@ public class CargaGrafo {
 			e.printStackTrace();
 		}
 	}
-
 }
 
 class Vertice{
@@ -392,37 +525,6 @@ class Geometrias
 
 
 }
-
-class Estacion{
-	Double EPOLONGITU;
-	Double EPOLATITUD;
-	int OBJECTID;
-	String EPODESCRIP;
-	String EPODIR_SITIO;
-	String EPOSERVICIO;
-	String EPOHORARIO;
-	String EPOTELEFON;
-	String EPOIULOCAL;
-	@Override
-	public String toString() {
-		return "Estacion [EPOLONGITU=" + EPOLONGITU + ", EPOLATITUD=" + EPOLATITUD + ", OBJECTID=" + OBJECTID
-				+ ", EPODESCRIP=" + EPODESCRIP + ", EPODIR_SITIO=" + EPODIR_SITIO + ", EPOSERVICIO=" + EPOSERVICIO
-				+ ", EPOHORARIO=" + EPOHORARIO + ", EPOTELEFON=" + EPOTELEFON + ", EPOIULOCAL=" + EPOIULOCAL + "]";
-	}
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 class Listado {
