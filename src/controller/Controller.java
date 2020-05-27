@@ -44,12 +44,6 @@ public class Controller {
 	public Controller ()
 	{
 		cargaDatos = new CargaGrafo();
-		Iterator<Edge<Double>>arcos=cargaDatos.g.edges().iterator();
-		while(arcos.hasNext())
-		{
-			Edge jaja=arcos.next();
-			System.out.println(jaja.getInfo());
-		}
 	}	
 	public void run() 
 	{
