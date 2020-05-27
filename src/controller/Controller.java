@@ -44,6 +44,8 @@ public class Controller {
 	public Controller ()
 	{
 		cargaDatos = new CargaGrafo();
+		grafo=cargaDatos.g;
+		nodosConEstaciones=cargaDatos.nodosConEstaciones;
 	}	
 	public void run() 
 	{
@@ -58,14 +60,9 @@ public class Controller {
 			switch(option){
 				case 1:
 					Iterator<Integer>  it = grafo.vertices();
-					int id1 = -1;
-					int id2 = -1;
-					while(it.hasNext()) {
-						if(id1 == -1) id1 = it.next();
-						else if(id2 == -1) id2 = it.next();
-						else break;
-					}
-					int to = lector.nextInt();
+					int id1 = lector.nextInt();
+					int id2 = lector.nextInt();
+					System.out.println(grafo.getInfoArc(id1,id2));
 				    long start = System.currentTimeMillis();
 				    CaminoDistanciaMinima1A(id1, id2);
 				    long end = System.currentTimeMillis();
