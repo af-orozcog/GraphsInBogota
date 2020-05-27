@@ -202,7 +202,7 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 		Integer fi = needed.keys().next();
 		boolean marked[] = new boolean[graph.V()];
 		modifiedDFS(graph.translate(fi),graph,needed,ans,marked);
-		return null;
+		return ans;
 	}
 	
 	/**
