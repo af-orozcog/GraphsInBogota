@@ -63,16 +63,34 @@ public class Controller {
 			int option = lector.nextInt();
 			switch(option){
 				case 1:
-					Iterator<Integer>  it = grafo.vertices();
+					System.out.println("-----------------------------------------------------------------------");
+					System.out.println("-----------------------------------------------------------------------");
+					System.out.println("-----------------------------------------------------------------------");
+					System.out.println("Por favor digite el nodo desde donde quiere partir: ");
 					int from = lector.nextInt();
+					System.out.println("Por favor digite el nodo al que quiere llegar: ");
 					int to = lector.nextInt();
-					//System.out.println(grafo.getInfoArc(from,to));
 				    long start = System.currentTimeMillis();
 				    CaminoDistanciaMinima1A(from,to);
 				    long end = System.currentTimeMillis();
+				    System.out.println("el tiempo que toma al algoritmo encontrar la respuesta y dibujar el camino"
+				    		+ "es: " + (end-start));
+				    System.out.println("-----------------------------------------------------------------------");
+					System.out.println("-----------------------------------------------------------------------");
+					System.out.println("-----------------------------------------------------------------------");
 					break;	
 				case 2:
 					PoliceStationComponents();
+					break;
+				case 3:
+					System.out.println("-----------------------------------------------------------------------");
+					System.out.println("-----------------------------------------------------------------------");
+					System.out.println("-----------------------------------------------------------------------");
+					System.out.println("Por favor digite el numero de comparendos de mayor gravedad que se quiere"
+							+ "utilizar: ");
+					int m = lector.nextInt();
+					
+					break;
 			}
 		}
 		
@@ -151,8 +169,18 @@ public class Controller {
 		HashTableSC<Integer, Integer> needed = new HashTableSC<Integer, Integer>(200);
 		for(int i = need.getSize()-1, j = 0; i > -1 && j < m;--i,++j)
 			needed.put(g.translate(need.getElement(i).getSecond()), 1);
-		ORArray<Edge<Double>> aPintar = Graph.pruneMST(g, needed);
 		
+		ORArray<Edge<Double>> aPintar = new ORArray<Edge<Double>>();
+		while(needed.getSize() != 0) {
+			ORArray<Edge<Double>> temp = Graph.pruneMST(g, needed);
+			for(Edge<Double> edg: temp)
+				aPintar.add(edg);
+		}
+		double costo = 0.0;
+		for(Edge<Double> edg: aPintar) {
+			costo += edg.getInfo();
+		}
+		System.out.println("el costo del arbol es: ");
 	}
 	
 	
@@ -171,7 +199,16 @@ public class Controller {
 		HashTableSC<Integer, Integer> needed = new HashTableSC<Integer, Integer>(200);
 		for(int i = infraccionesNodo.getSize()-1, j = 0; i > -1 && j < m;--i,++j)
 			needed.put(g.translate(infraccionesNodo.getElement(i).getSecond()), 1);
-		ORArray<Edge<Double>> aPintar = Graph.pruneMST(g, needed);
+		ORArray<Edge<Double>> aPintar = new ORArray<Edge<Double>>();
+		while(needed.getSize() != 0) {
+			ORArray<Edge<Double>> temp = Graph.pruneMST(g, needed);
+			for(Edge<Double> edg: temp)
+				aPintar.add(edg);
+		}
+		double costo = 0.0;
+		for(Edge<Double> edg: aPintar) {
+			costo += edg.getInfo();
+		}
 	}
 	
 	/**

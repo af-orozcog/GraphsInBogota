@@ -202,7 +202,7 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 		Integer fi = needed.keys().next();
 		boolean marked[] = new boolean[graph.V()];
 		modifiedDFS(graph.translate(fi),graph,needed,ans,marked);
-		return null;
+		return ans;
 	}
 	
 	/**
@@ -218,7 +218,7 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 			boolean marked[]) {
 		marked[t] = true;
 		boolean ret = false;
-		if(needed.contains(t)) ret = true;
+		if(needed.contains(t)) {ret = true; needed.delete(t);}
 		Iterator<Integer> it = graph.adj(graph.translateInverse(t));
 		while(it.hasNext()) {
 			Integer ad = it.next();
