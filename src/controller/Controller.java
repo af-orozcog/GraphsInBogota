@@ -1,6 +1,7 @@
 package controller;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -43,7 +44,12 @@ public class Controller {
 	public Controller ()
 	{
 		cargaDatos = new CargaGrafo();
-		grafo = cargaDatos.g;
+		try {
+			cargaDatos.main(null);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}	
 	public void run() 
 	{
@@ -57,12 +63,17 @@ public class Controller {
 			int option = lector.nextInt();
 			switch(option){
 				case 1:
-					System.out.println("digito el nodo origen sapee");
-					int from = lector.nextInt();
-					System.out.println("digite el nodo destino sapeee");
+					Iterator<Integer>  it = grafo.vertices();
+					int id1 = -1;
+					int id2 = -1;
+					while(it.hasNext()) {
+						if(id1 == -1) id1 = it.next();
+						else if(id2 == -1) id2 = it.next();
+						else break;
+					}
 					int to = lector.nextInt();
 				    long start = System.currentTimeMillis();
-				    CaminoDistanciaMinima1A(from, to);
+				    CaminoDistanciaMinima1A(id1, id2);
 				    long end = System.currentTimeMillis();
 					break;	
 			}
