@@ -12,6 +12,7 @@ import model.Comparendo;
 import model.data_structures.Dijkstra;
 import model.data_structures.Edge;
 import model.data_structures.Graph;
+import model.data_structures.HashTableLP;
 import model.data_structures.HashTableSC;
 import model.data_structures.KruskalMST;
 import model.data_structures.ORArray;
@@ -35,7 +36,8 @@ public class Controller {
 	ORArray<Integer> nodosConEstaciones; 
 	
 	private Comparable<Comparendo>[] consulta;
-	
+	HashTableLP<Integer,Comparendo> comparendos;
+
 	CargaGrafo cargaDatos;
 	
 	/**
@@ -46,8 +48,8 @@ public class Controller {
 	{
 		cargaDatos = new CargaGrafo();
 		grafo=cargaDatos.g;
-		nodosConEstaciones = cargaDatos.nodosConEstaciones;
-		
+		nodosConEstaciones=cargaDatos.nodosConEstaciones;
+		comparendos=cargaDatos.comparendos;
 	}	
 	public void run() 
 	{
@@ -294,5 +296,5 @@ public class Controller {
 		}
 		//la llave es el color y los arcos
 	}
-	
+
 }
