@@ -7,6 +7,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Scanner;
 
+import com.teamdev.jxmaps.LatLng;
+
 import model.CargaGrafo;
 import model.Comparendo;
 import model.data_structures.Dijkstra;
@@ -18,6 +20,7 @@ import model.data_structures.KruskalMST;
 import model.data_structures.ORArray;
 import model.data_structures.PairComp;
 import model.vo.Coordinates;
+import model.vo.Mapa;
 import model.vo.VertexInfo;
 
 
@@ -91,10 +94,26 @@ public class Controller {
 					int m = lector.nextInt();
 					
 					break;
+				case 4:
+					System.out.println("YA ESTÁ DIBUJANDO HIJUEPUTA VIDA");
+					LatLng pequeño=new LatLng(cargaDatos.latmin,cargaDatos.lonmin);
+					LatLng grande=new LatLng(cargaDatos.latmax,cargaDatos.lonmax);
+					generarMapaGrafo(grafo, pequeño, grande, false, null);
 			}
 		}
 		
 	}
+	
+	public void generarMapaGrafo(Graph<Integer, VertexInfo, Double> grafo2,LatLng min,LatLng max,boolean pSinoVertices, Graph<Long, VertexInfo, Double> pGrafoAdicional)
+	{
+		Mapa x=new Mapa(grafo2,min,max,pSinoVertices, pGrafoAdicional);
+		Mapa.graficarMapa(x);
+	}
+
+	
+	
+	
+	
 	
 	/**
 	 * 

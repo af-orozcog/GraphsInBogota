@@ -25,7 +25,10 @@ public class CargaGrafo {
 	public static Graph<Integer,VertexInfo,Double> g = new Graph<Integer,VertexInfo,Double>();
 	public static ORArray<Integer> nodosConEstaciones=new ORArray<Integer>();
 	public static HashTableLP<Integer,Comparendo> comparendos=new HashTableLP<Integer,Comparendo>(250000);
-
+	public static double latmin;
+	public static double latmax;
+	public static double lonmin;
+	public static double lonmax;
 	public CargaGrafo()
 	{
 		//		cargarGrafo();
@@ -95,12 +98,12 @@ public class CargaGrafo {
 		cargarInfracciones();
 		saveJSON("./data/GRAFOBENDITO.json");
 
-//		try {
-//			loadJSON("./data/GRAFOBENDITO.json");
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		//		try {
+		//			loadJSON("./data/GRAFOBENDITO.json");
+		//		} catch (Exception e) {
+		//			// TODO Auto-generated catch block
+		//			e.printStackTrace();
+		//		}
 
 
 		//				System.out.println("Escribiendo");
@@ -155,8 +158,8 @@ public class CargaGrafo {
 			Coordinates coor=info.getCoordinates();
 			JSONObject vertice = new JSONObject();
 			vertice.put("id", id1);
-			vertice.put("lat", coor.lat);
-			vertice.put("lon", coor.lon);
+			vertice.put("lon", coor.lat);
+			vertice.put("lat", coor.lon);
 
 			Iterator<Integer> it2 = g.adj(id1);
 			JSONArray adj = new JSONArray();
@@ -193,11 +196,31 @@ public class CargaGrafo {
 			FileReader nm = new FileReader(rutaArchivo);
 			JSONParser parser = new JSONParser();
 			JSONArray array = (JSONArray) parser.parse(nm);
+			boolean primero=true;
 			for(Object o1 : array) {
 				JSONObject vertice = (JSONObject) o1;
 				Coordinates coor = new Coordinates(
 						Double.parseDouble(vertice.get("lat").toString()), 
 						Double.parseDouble(vertice.get("lon").toString()));
+
+				if (primero)
+				{
+					latmin=coor.lat;
+					latmax=coor.lat;
+					lonmin=coor.lon;
+					lonmax=coor.lon;
+					primero=false;
+				}
+				else {
+					if(coor.lat<latmin)
+						latmin=coor.lat;
+					if (coor.lat>latmax)
+						latmax=coor.lat;
+					if(coor.lon<lonmin)
+						lonmin=coor.lon;
+					if(coor.lon>lonmax)
+						lonmax=coor.lon;
+				}
 
 				VertexInfo cont = new VertexInfo(coor,Integer.parseInt(vertice.get("id").toString()));
 
@@ -254,29 +277,29 @@ public class CargaGrafo {
 				if(comparendo.getCLASE_VEHICULO().equals("AUTOMÓVIL"))
 					comparendo.setCLASE_VEHICULO("AUTOMOVIL");
 				comparendos.put(comparendo.OBJECTID, comparendo);
-//				Integer idVertice= 0;
-//
-//				VertexInfo info =  (VertexInfo) g.getInfoVertex(idVertice);
-//				Coordinates coorver=info.getCoordinates();
-//
-//				Double minima=haversine(coordenada,coorver);
-//
-//
-//				Iterator<Integer> iter=g.vertices();
-//
-//
-//				while (iter.hasNext()) {
-//					Integer v = (Integer) iter.next();
-//					info =  (VertexInfo) g.getInfoVertex(v);
-//					coorver=info.getCoordinates();
-//					if(haversine(coordenada,coorver)<minima)
-//					{
-//						idVertice=v;
-//						minima=haversine(coordenada,coorver);
-//					}
-//				}
-//				VertexInfo infoC=(VertexInfo) g.getInfoVertex(idVertice);
-//				infoC.addInfraction(comparendo.OBJECTID);
+				//				Integer idVertice= 0;
+				//
+				//				VertexInfo info =  (VertexInfo) g.getInfoVertex(idVertice);
+				//				Coordinates coorver=info.getCoordinates();
+				//
+				//				Double minima=haversine(coordenada,coorver);
+				//
+				//
+				//				Iterator<Integer> iter=g.vertices();
+				//
+				//
+				//				while (iter.hasNext()) {
+				//					Integer v = (Integer) iter.next();
+				//					info =  (VertexInfo) g.getInfoVertex(v);
+				//					coorver=info.getCoordinates();
+				//					if(haversine(coordenada,coorver)<minima)
+				//					{
+				//						idVertice=v;
+				//						minima=haversine(coordenada,coorver);
+				//					}
+				//				}
+				//				VertexInfo infoC=(VertexInfo) g.getInfoVertex(idVertice);
+				//				infoC.addInfraction(comparendo.OBJECTID);
 			}
 
 
