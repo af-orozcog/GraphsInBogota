@@ -5,86 +5,68 @@ import java.util.Date;
 
 
 
-public class Comparendo implements Comparable<Comparendo> {
-	private int objectId;
-	private Date fecha_hora;
-	private String des_infrac;
-	private String medio_dete;
-	private String clase_vehi;
-	private String tipo_servi;
-	private String infraccion;
-	private String localidad;
-
-	private double latitud;
-	private double longitud;
-	
-	public Comparendo(int objeId, Date fecha, String descripcion, String detencion, String claseVeh, String tipoSer, String codInfraccion, String localidadP, double lonP, double latP)
-	{
-		objectId = objeId;
-		fecha_hora = fecha;
-		des_infrac = descripcion;
-		medio_dete = detencion;
-		clase_vehi = claseVeh;
-		tipo_servi = tipoSer;
-		infraccion = codInfraccion;
-		localidad = localidadP;
-		longitud = lonP;
-		latitud = latP;
+public class Comparendo {
+	int OBJECTID;
+	Double FECHA_HORA;
+	String DES_INFRACCION;
+	String MEDIO_DETECCION;
+	String CLASE_VEHICULO;
+	String TIPO_SERVICIO;
+	String INFRACCION;
+	String LOCALIDAD;
+	public int getOBJECTID() {
+		return OBJECTID;
 	}
-	
-public int compareTo(Comparendo parametro) {
-		
-		Date fechaHora = parametro.getfecha();
-		double fecha1 = fechaHora.getTime();
-		double fecha2 = fecha_hora.getTime();
-		int object1 = parametro.getid();
-		if(fecha2 > fecha1) 
-			{
-			return 1;
-			}
-		else if(fecha2 < fecha1)
-			{
-			return -1;
-			}
-		else if(fecha2 == fecha1)
-		{
-			if(objectId > object1)
-			{
-				return 1;
-			}
-			else if(objectId < object1)
-			{
-				return -1;
-			}
-		}
-		return 0;
+	public void setOBJECTID(int oBJECTID) {
+		OBJECTID = oBJECTID;
 	}
-
-	
-	
-	
+	public Double getFECHA_HORA() {
+		return FECHA_HORA;
+	}
+	public void setFECHA_HORA(Double fECHA_HORA) {
+		FECHA_HORA = fECHA_HORA;
+	}
+	public String getDES_INFRACCION() {
+		return DES_INFRACCION;
+	}
+	public void setDES_INFRACCION(String dES_INFRACCION) {
+		DES_INFRACCION = dES_INFRACCION;
+	}
+	public String getMEDIO_DETECCION() {
+		return MEDIO_DETECCION;
+	}
+	public void setMEDIO_DETECCION(String mEDIO_DETECCION) {
+		MEDIO_DETECCION = mEDIO_DETECCION;
+	}
+	public String getCLASE_VEHICULO() {
+		return CLASE_VEHICULO;
+	}
+	public void setCLASE_VEHICULO(String cLASE_VEHICULO) {
+		CLASE_VEHICULO = cLASE_VEHICULO;
+	}
+	public String getTIPO_SERVICIO() {
+		return TIPO_SERVICIO;
+	}
+	public void setTIPO_SERVICIO(String tIPO_SERVICIO) {
+		TIPO_SERVICIO = tIPO_SERVICIO;
+	}
+	public String getINFRACCION() {
+		return INFRACCION;
+	}
+	public void setINFRACCION(String iNFRACCION) {
+		INFRACCION = iNFRACCION;
+	}
+	public String getLOCALIDAD() {
+		return LOCALIDAD;
+	}
+	public void setLOCALIDAD(String lOCALIDAD) {
+		LOCALIDAD = lOCALIDAD;
+	}
 	@Override
 	public String toString() {
-		return "Comparendo [OBJECTID=" + objectId + ", FECHA_HORA=" + fecha_hora + ", DES_INFRAC=" + des_infrac
-				+ ", MEDIO_DETE=" + medio_dete + ", CLASE_VEHI=" + clase_vehi + ", TIPO_SERVI=" + tipo_servi
-				+ ", INFRACCION=" + infraccion + ", LOCALIDAD=" + localidad + ", latitud=" + latitud + ", longitud="
-				+ longitud + "]";
+		return "Comparendo [OBJECTID=" + OBJECTID + ", FECHA_HORA=" + FECHA_HORA + ", DES_INFRACCION=" + DES_INFRACCION
+				+ ", MEDIO_DETECCION=" + MEDIO_DETECCION + ", CLASE_VEHICULO=" + CLASE_VEHICULO + ", TIPO_SERVICIO="
+				+ TIPO_SERVICIO + ", INFRACCION=" + INFRACCION + ", LOCALIDAD=" + LOCALIDAD + "]";
 	}
-	public int getid()
-	{
-		return objectId;
-	}
-	public double getLatitud()
-	{
-		return latitud;
-	}
-	public double getLongitud()
-	{
-		return longitud;
-	}
-	public Date getfecha()
-	{
-		return fecha_hora;
-	}
-	
+
 }

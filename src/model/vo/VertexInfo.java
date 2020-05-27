@@ -12,7 +12,7 @@ public class VertexInfo implements IInfoVertex{
 	/**
 	 * 
 	 */
-	private ORArray<Long> infractions;
+	private ORArray<Integer> infractions;
 	
 	/**
 	 * 
@@ -22,14 +22,17 @@ public class VertexInfo implements IInfoVertex{
 	private PoliceStation policeStation;
 	
 	
+	private Integer id;
+	
 	/**
 	 * 
 	 * @param pCoor
 	 */
-	public VertexInfo( Coordinates pCoor) {
-		coor = pCoor;
-		infractions = new ORArray<Long>();
+	public VertexInfo( Coordinates pCoor,Integer pId) {
+		setCoordinates(pCoor);
+		infractions = new ORArray<Integer>();
 		average = null;
+		id=pId;
 	}
 	
 	/**
@@ -37,12 +40,8 @@ public class VertexInfo implements IInfoVertex{
 	 * @param id
 	 * @param ave
 	 */
-	public void addInfraction(Long id, Double ave) {
+	public void addInfraction(int id) {
 		infractions.add(id);
-		if(average == null)
-			average = ave;
-		else
-			average = (average +ave)/2.0;
 	}
 	
 	/**
@@ -53,6 +52,10 @@ public class VertexInfo implements IInfoVertex{
 		this.policeStation = policeStation;
 	}
 	
+	public ORArray<Integer> getInfractions()
+	{
+		return infractions;
+	}
 	@Override
 	public Double getInfo1() {
 		return this.average;
@@ -61,6 +64,14 @@ public class VertexInfo implements IInfoVertex{
 	@Override
 	public Double getInfo2() {
 		return this.infractions.getSize().doubleValue();
+	}
+
+	public Coordinates getCoordinates() {
+		return coor;
+	}
+
+	public void setCoordinates(Coordinates coor) {
+		this.coor = coor;
 	}
 
 }
