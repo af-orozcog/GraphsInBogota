@@ -16,6 +16,7 @@ import model.data_structures.HashTableSC;
 import model.data_structures.KruskalMST;
 import model.data_structures.ORArray;
 import model.data_structures.PairComp;
+import model.vo.Coordinates;
 import model.vo.VertexInfo;
 
 
@@ -60,9 +61,9 @@ public class Controller {
 			switch(option){
 				case 1:
 					Iterator<Integer>  it = grafo.vertices();
-					int id1 = lector.nextInt();
-					int id2 = lector.nextInt();
-					System.out.println(grafo.getInfoArc(id1,id2));
+					int from = lector.nextInt();
+					int to = lector.nextInt();
+					//System.out.println(grafo.getInfoArc(from,to));
 				    long start = System.currentTimeMillis();
 				    CaminoDistanciaMinima1A(from,to);
 				    long end = System.currentTimeMillis();
@@ -207,6 +208,18 @@ public class Controller {
 		//Graph<Integer,VertexInfo,Double> G = caminos.generateGraph();
 		HashTableSC<Integer,ORArray<Edge<Double>>> pintar = Graph.ConnectedComponent(grafo);
 		System.out.println("cuantos componentes conectador hay en la re puta :v "+ pintar.getSize());
+		Iterator<Integer> it = pintar.keys();
+		for(int color = 1; it.hasNext();++color) {
+			ORArray<Edge<Double>> thro =  pintar.get(it.next());
+			for(Edge<Double> edg:  thro) {
+				//todos dentro del for tienen que tener el mismo color :v
+				int one = edg.either();
+				int ot = edg.other(one);
+				Coordinates onee = grafo.getInfoVertex(grafo.translateInverse(one)).getCoordinates();
+				Coordinates twoo = grafo.getInfoVertex(grafo.translateInverse(ot)).getCoordinates();
+				//del mismo color esos perros :v
+			}
+		}
 		//la llave es el color y los arcos
 	}
 	
