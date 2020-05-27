@@ -265,7 +265,7 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 			if(marked[graph.translate(ad)]) continue;
 			if(!ans.contains(color)) 
 				ans.put(color, new ORArray<Edge<Double>>());
-			ans.get(color).add(graph.getEdge(t, ad));
+			ans.get(color).add(graph.getEdge(graph.translateInverse(t), ad));
 			DFSColors(graph.translate(ad), graph, ans, marked,color);
 		}
 	}

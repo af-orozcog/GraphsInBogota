@@ -44,6 +44,7 @@ public class Controller {
 	public Controller ()
 	{
 		cargaDatos = new CargaGrafo();
+		grafo = cargaDatos.g;
 	}	
 	public void run() 
 	{
@@ -58,18 +59,14 @@ public class Controller {
 			switch(option){
 				case 1:
 					Iterator<Integer>  it = grafo.vertices();
-					int id1 = -1;
-					int id2 = -1;
-					while(it.hasNext()) {
-						if(id1 == -1) id1 = it.next();
-						else if(id2 == -1) id2 = it.next();
-						else break;
-					}
+					int from = lector.nextInt();
 					int to = lector.nextInt();
 				    long start = System.currentTimeMillis();
-				    CaminoDistanciaMinima1A(id1, id2);
+				    CaminoDistanciaMinima1A(from,to);
 				    long end = System.currentTimeMillis();
 					break;	
+				case 2:
+					PoliceStationComponents();
 			}
 		}
 		
@@ -204,9 +201,10 @@ public class Controller {
 	 * 
 	 */
 	public void PoliceStationComponents() {
-		Dijkstra caminos = new Dijkstra(this.grafo,nodosConEstaciones,false);
-		Graph<Integer,VertexInfo,Double> G = caminos.generateGraph();
-		HashTableSC<Integer,ORArray<Edge<Double>>> pintar = Graph.ConnectedComponent(G);
+		//Dijkstra caminos = new Dijkstra(this.grafo,nodosConEstaciones,false);
+		//Graph<Integer,VertexInfo,Double> G = caminos.generateGraph();
+		HashTableSC<Integer,ORArray<Edge<Double>>> pintar = Graph.ConnectedComponent(grafo);
+		System.out.println("cuantos componentes conectador hay en la re puta :v "+ pintar.getSize());
 		//la llave es el color y los arcos
 	}
 	

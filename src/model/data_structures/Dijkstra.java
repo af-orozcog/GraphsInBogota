@@ -18,7 +18,6 @@ public class Dijkstra {
 	/**
 	 * 
 	 */
-	private MinPQ<PairComp<Double,Integer>> pq;
 
 	
 	/**
@@ -34,6 +33,7 @@ public class Dijkstra {
 	 */
 	public Dijkstra(Graph<Integer,VertexInfo,Double> G,ORArray<Integer> s, boolean option)
 	{
+		MinPQ<PairComp<Double,Integer>> pq;
 		graph = G;
 		dad = new Integer[G.V()];
 		distTo = new Double[G.V()];
@@ -44,6 +44,7 @@ public class Dijkstra {
 			distTo[G.translate(va)] = 0.0;
 			dad[G.translate(va)] = -1;
 			pq.insert(new PairComp<Double,Integer>(0.0,G.translate(va)));
+			System.out.println(G.translate(va));
 		}
 		while(pq.size() != 0) {
 			PairComp<Double,Integer> front = pq.delMin();
@@ -57,9 +58,11 @@ public class Dijkstra {
 					val = G.getInfoVertex(G.translateInverse(ot)).getInfo2();
 				else
 					val = va.getInfo();
-				if(distTo[ot] > val) {
-					distTo[ot] = val;
+				System.out.println("cual es la sapa distancia :v "+ val + " wuttt " + graph.translateInverse(ot));
+				if(distTo[ot] > val + distTo[front.getSecond()]) {
+					distTo[ot] = val + distTo[front.getSecond()];
 					dad[ot] = front.getSecond();
+					pq.insert(new PairComp<Double,Integer>(val,ot));
 				}
 			}
 		}
