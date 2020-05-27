@@ -13,20 +13,40 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 				+ info + "]";
 	}
 
-	private int V; // number of vertices
+	/**
+	 * Number of vertices in the graph
+	 */
+	private int V; 
 	
+	/**
+	 * number of edges in the graph
+	 */
 	private int E; // number of edges
 	
+	/**
+	 * adjacency list for the graph edges
+	 */
 	private ORArray<Queue<Edge<A>>> adj; // adjacency lists
 	
+	/**
+	 * hash map to transalte between possible keys used for the nodes
+	 */
 	private HashTableSC<K, Integer> st;
 	
+	/**
+	 * hash map to transalte between possible keys used for the nodes
+	 */
 	private HashTableSC<Integer, K> stReverse; 
 	
+	/**
+	 * Info of the each node 
+	 */
 	private ORArray<V> info;
 	
-	//private IndexMaxPQ<V> ordered;
 	
+	/**
+	 * Constructor of the graph
+	 */
 	public Graph()
 	{
 		this.V = 0;
@@ -37,9 +57,24 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 		info = new ORArray<V>();
 	}
 	
+	/**
+	 * returns the number of nodes in the graph
+	 * @return the number of nodes in the graph
+	 */
 	public int V() { return V; }
+	
+	/**
+	 * returns the number of edges in the graph
+	 * @return the number of edges in the graph
+	 */
 	public int E() { return E; }
 	
+	/**
+	 * Method that adds an edge between two nodes already in the graph
+	 * @param idVertexIni one of the nodes that will be connected
+	 * @param idVertexFin one of the nodes that will be connected
+	 * @param infoArc the information that will be stored in the edge
+	 */
 	public void addEdge(K idVertexIni, K idVertexFin, A infoArc)
 	{
 		if(st.get(idVertexIni) == null) return;
@@ -56,7 +91,11 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 		E++;
 	}
 
-	
+	/**
+	 * Method to add a node to the graph with its info
+	 * @param idVertex the id of the node to add
+	 * @param infoVertex the information associated with that node
+	 */
 	public void addVertex(K idVertex, V infoVertex) {
 		if(st.get(idVertex) != null)
 			return;
@@ -68,17 +107,34 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 		
 	}
 	
+	/**
+	 * returns the information of the node passed by parameter
+	 * @param idVertex the id of the vertex we want the info from
+	 * @return the information of the node passed by parameter
+	 */
 	public V getInfoVertex(K idVertex) {
 		if(st.get(idVertex) == null)
 			return null;
 		return info.getElement(st.get(idVertex));
 	}
 	
+	
+	/**
+	 * Method that sets info to a given vertex already in the graph
+	 * @param idVertex the id of the vertex we want the info from
+	 * @param infoVertex the information of the node
+	 */
 	public void setInfoVertex(K idVertex, V infoVertex) {
 		if(st.get(idVertex) == null) return;
 		info.addPos(infoVertex, st.get(idVertex));
 	}
 	
+	/**
+	 * Method that returns the information of the edge between two nodes passed by parameter
+	 * @param idVertexIni the id of one of the end points of the edge
+	 * @param idVertexFin the id of one of the end points of the edge
+	 * @return the information of the edge between two nodes passed by parameter
+	 */
 	public A getInfoArc(K idVertexIni, K idVertexFin){
 		if(st.get(idVertexIni) == null) 
 			return null;
@@ -100,6 +156,12 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 		return answer;
 	}
 	
+	/**
+	 * 
+	 * @param idVertexIni
+	 * @param idVertexFin
+	 * @param infoArc
+	 */
 	public void setInfoArc(K idVertexIni, K idVertexFin,A infoArc) {
 		if(st.get(idVertexIni) == null)
 			return;
@@ -119,6 +181,11 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param v
+	 * @return
+	 */
 	public Iterator<K> adj(K v)
 	{ 
 		ORArray<K> answer = new ORArray<K>();
@@ -135,22 +202,46 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 		return answer.iterator();
 	}
 	
+	/**
+	 * 
+	 * @param value
+	 * @return
+	 */
 	public Integer translate(K value) {
 		return st.get(value);
 	} 
+	
+	/**
+	 * 
+	 * @param value
+	 * @return
+	 */
 	public K translateInverse(Integer value) {
 		return stReverse.get(value);
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public Iterator<K> vertices(){
 		return st.keys();
 	}
 	
+	/**
+	 * 
+	 * @param value
+	 * @return
+	 */
 	public Iterator<Edge<A>> edgesTo(K value){
 		int val = st.get(value);
 		return adj.getElement(val).iterator();
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public Iterable<Edge<A>> edges() {
         Queue<Edge<A>> list = new Queue<Edge<A>>();
         for (int v = 0; v < V; v++) {
@@ -170,6 +261,12 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
         return list;
     }
 	
+	/**
+	 * 
+	 * @param idVertexIni
+	 * @param idVertexFin
+	 * @return
+	 */
 	public Edge<A> getEdge(K idVertexIni, K idVertexFin){
 		if(st.get(idVertexIni) == null)
 			return null;
