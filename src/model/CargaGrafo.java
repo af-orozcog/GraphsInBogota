@@ -14,6 +14,7 @@ import org.json.simple.parser.JSONParser;
 import com.google.gson.Gson;
 
 import model.data_structures.Graph;
+import model.data_structures.HashTableLP;
 import model.data_structures.ORArray;
 import model.vo.Coordinates;
 import model.vo.PoliceStation;
@@ -22,13 +23,15 @@ import model.vo.VertexInfo;
 public class CargaGrafo {
 
 	public static Graph<Integer,VertexInfo,Double> g = new Graph<Integer,VertexInfo,Double>();
-	public static ORArray<Integer> nodosConEstaciones=new ORArray<Integer>(); 
+	public static ORArray<Integer> nodosConEstaciones=new ORArray<Integer>();
+	public static HashTableLP<Integer,Comparendo> comparendos=new HashTableLP<Integer,Comparendo>(250000);
 
 	public CargaGrafo()
 	{
 		//		cargarGrafo();
 		try {
 			loadJSON("./data/GRAFOBENDITO.json");
+			cargarInfracciones();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -89,6 +92,7 @@ public class CargaGrafo {
 
 		//Para guardar el grafo
 		cargarGrafo();
+		cargarInfracciones();
 		saveJSON("./data/GRAFOBENDITO.json");
 
 //		try {
@@ -247,34 +251,34 @@ public class CargaGrafo {
 				Double latitud=feature.getGeometry().getCoordinates()[0];
 				Double longitud=feature.getGeometry().getCoordinates()[1];
 				Coordinates coordenada=new Coordinates(latitud,longitud); 
-
-				Integer idVertice= 0;
-
-				VertexInfo info =  (VertexInfo) g.getInfoVertex(idVertice);
-				Coordinates coorver=info.getCoordinates();
-
-				Double minima=haversine(coordenada,coorver);
-
-
-				Iterator<Integer> iter=g.vertices();
-
-
-				while (iter.hasNext()) {
-					Integer v = (Integer) iter.next();
-					info =  (VertexInfo) g.getInfoVertex(v);
-					coorver=info.getCoordinates();
-					if(haversine(coordenada,coorver)<minima)
-					{
-						idVertice=v;
-						minima=haversine(coordenada,coorver);
-					}
-				}
-				VertexInfo infoC=(VertexInfo) g.getInfoVertex(idVertice);
-				infoC.addInfraction(comparendo.OBJECTID);
+				if(comparendo.getCLASE_VEHICULO().equals("AUTOMÓVIL"))
+					comparendo.setCLASE_VEHICULO("AUTOMOVIL");
+				comparendos.put(comparendo.OBJECTID, comparendo);
+//				Integer idVertice= 0;
+//
+//				VertexInfo info =  (VertexInfo) g.getInfoVertex(idVertice);
+//				Coordinates coorver=info.getCoordinates();
+//
+//				Double minima=haversine(coordenada,coorver);
+//
+//
+//				Iterator<Integer> iter=g.vertices();
+//
+//
+//				while (iter.hasNext()) {
+//					Integer v = (Integer) iter.next();
+//					info =  (VertexInfo) g.getInfoVertex(v);
+//					coorver=info.getCoordinates();
+//					if(haversine(coordenada,coorver)<minima)
+//					{
+//						idVertice=v;
+//						minima=haversine(coordenada,coorver);
+//					}
+//				}
+//				VertexInfo infoC=(VertexInfo) g.getInfoVertex(idVertice);
+//				infoC.addInfraction(comparendo.OBJECTID);
 			}
 
-			VertexInfo infoC=(VertexInfo) g.getInfoVertex(0);
-			System.out.println(infoC.getInfractions());
 
 		} catch (IOException e) {
 			e.printStackTrace();
