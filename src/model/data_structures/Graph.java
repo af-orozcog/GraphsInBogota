@@ -157,10 +157,10 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 	}
 	
 	/**
-	 * 
-	 * @param idVertexIni
-	 * @param idVertexFin
-	 * @param infoArc
+	 * Method that set the information of one edge
+	 * @param idVertexIni one end point of the edge
+	 * @param idVertexFin one end point of the edge
+	 * @param infoArc the info of the arc
 	 */
 	public void setInfoArc(K idVertexIni, K idVertexFin,A infoArc) {
 		if(st.get(idVertexIni) == null)
@@ -182,9 +182,9 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 	}
 	
 	/**
-	 * 
-	 * @param v
-	 * @return
+	 * Method that returns an iterator of the adjacent nodes of a node 
+	 * @param v the key of the node
+	 * @return returns an iterator of the adjacent nodes of a node 
 	 */
 	public Iterator<K> adj(K v)
 	{ 
@@ -203,35 +203,35 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 	}
 	
 	/**
-	 * 
-	 * @param value
-	 * @return
+	 * Method that translate from the original id to a numerical ID
+	 * @param value the original key of a value
+	 * @return numerical ID
 	 */
 	public Integer translate(K value) {
 		return st.get(value);
 	} 
 	
 	/**
-	 * 
-	 * @param value
-	 * @return
+	 * Method that translate inverse from a numerical id to a key ID
+	 * @param value of the translated id
+	 * @return key ID
 	 */
 	public K translateInverse(Integer value) {
 		return stReverse.get(value);
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * returns an iterator of all vertices in the graph
+	 * @return iterator of all vertices in the graph
 	 */
 	public Iterator<K> vertices(){
 		return st.keys();
 	}
 	
 	/**
-	 * 
-	 * @param value
-	 * @return
+	 * returns all the edges of a node
+	 * @param value the key ID of the node
+	 * @return all the edges of a node
 	 */
 	public Iterator<Edge<A>> edgesTo(K value){
 		int val = st.get(value);
@@ -239,8 +239,8 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * returns all the edges of the node
+	 * @return all the edges of the node
 	 */
 	public Iterable<Edge<A>> edges() {
         Queue<Edge<A>> list = new Queue<Edge<A>>();
@@ -262,10 +262,10 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
     }
 	
 	/**
-	 * 
-	 * @param idVertexIni
-	 * @param idVertexFin
-	 * @return
+	 * returns the edge given the end points key ID
+	 * @param idVertexIni the ID of one of the end points
+	 * @param idVertexFin the ID of one of the end points
+	 * @return the edge given the end points key ID
 	 */
 	public Edge<A> getEdge(K idVertexIni, K idVertexFin){
 		if(st.get(idVertexIni) == null)
@@ -289,10 +289,10 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 	}
 	
 	/**
-	 * 
-	 * @param graph
-	 * @param needed
-	 * @return
+	 * Method that prunes a MST to only use edges that connect nodes of interest
+	 * @param graph the graph generated as an MST
+	 * @param needed the nodes that are needed
+	 * @return an array with the edges of the new graph
 	 */
 	public static ORArray<Edge<Double>> pruneMST(Graph<Integer,VertexInfo,Double> graph, HashTableSC<Integer,Integer> needed){
 		ORArray<Edge<Double>> ans = new ORArray<Edge<Double>>();
@@ -303,7 +303,7 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 	}
 	
 	/**
-	 * 
+	 * Modified DFS that only taked the edges that connects nodes of interest
 	 * @param t
 	 * @param graph
 	 * @param needed
@@ -328,9 +328,9 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 	
 	
 	/**
-	 * 
-	 * @param graph
-	 * @return
+	 * Method that calculates the connected components given a graph
+	 * @param graph the graph to be used
+	 * @return a hashtable with the edges of a connected component
 	 */
 	public static HashTableSC<Integer, ORArray<Edge<Double>>> ConnectedComponent(Graph<Integer,VertexInfo,Double> graph){
 		HashTableSC<Integer,ORArray<Edge<Double>>> ans = new HashTableSC<Integer,ORArray<Edge<Double>>>(299);
@@ -347,7 +347,7 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 	}
 	
 	/**
-	 * 
+	 * altered DFS that paints the graph
 	 * @param t
 	 * @param graph
 	 * @param ans
