@@ -46,7 +46,8 @@ public class Controller {
 	{
 		cargaDatos = new CargaGrafo();
 		grafo=cargaDatos.g;
-		nodosConEstaciones=cargaDatos.nodosConEstaciones;
+		nodosConEstaciones = cargaDatos.nodosConEstaciones;
+		
 	}	
 	public void run() 
 	{
@@ -103,7 +104,14 @@ public class Controller {
 		send.add(idVertice1);
 		Dijkstra caminos = new Dijkstra(this.grafo,send,false);
 		System.out.println("La distancia m�s corta entre ambos puntos es: "+ caminos.distance(grafo.translateInverse(idVertice2)));
+		if(caminos.distance(grafo.translateInverse(idVertice2)) == Double.MAX_VALUE)return;
 		ORArray<Edge<Double>> paint = caminos.journey(grafo.translateInverse(idVertice2));
+		for(Edge<Double> edg: paint) {
+			int one = edg.either();
+			int two = edg.other(one);
+			Coordinates onee = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
+			Coordinates twoo = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
+		}
 		//TODO falta pintar mi doggo
 	}
 	
@@ -117,7 +125,14 @@ public class Controller {
 		send.add(idVertice1);
 		Dijkstra caminos = new Dijkstra(this.grafo,send,true);
 		System.out.println("La distancia m�s corta entre ambos puntos es, seg�n numero de infracciones: "+ caminos.distance(grafo.translateInverse(idVertice2)));
+		if(caminos.distance(grafo.translateInverse(idVertice2)) == Double.MAX_VALUE)return;
 		ORArray<Edge<Double>> paint = caminos.journey(grafo.translateInverse(idVertice2));
+		for(Edge<Double> edg: paint) {
+			int one = edg.either();
+			int two = edg.other(one);
+			Coordinates onee = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
+			Coordinates twoo = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
+		}
 		//TODO falta pintar mi doggo
 	}
 	
@@ -174,10 +189,15 @@ public class Controller {
 				aPintar.add(edg);
 		}
 		double costo = 0.0;
-		for(Edge<Double> edg: aPintar) {
+		for(Edge<Double> edg: aPintar) 
 			costo += edg.getInfo();
+		System.out.println("el costo del arbol es: "  + costo);
+		for(Edge<Double> edg: aPintar) {
+			int one = edg.either();
+			int two = edg.other(one);
+			Coordinates onee = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
+			Coordinates twoo = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
 		}
-		System.out.println("el costo del arbol es: ");
 	}
 	
 	
@@ -203,8 +223,14 @@ public class Controller {
 				aPintar.add(edg);
 		}
 		double costo = 0.0;
-		for(Edge<Double> edg: aPintar) {
+		for(Edge<Double> edg: aPintar) 
 			costo += edg.getInfo();
+		System.out.println("el costo del arbol es: "  + costo);
+		for(Edge<Double> edg: aPintar) {
+			int one = edg.either();
+			int two = edg.other(one);
+			Coordinates onee = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
+			Coordinates twoo = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
 		}
 	}
 	
@@ -227,12 +253,21 @@ public class Controller {
 		Dijkstra caminos = new Dijkstra(this.grafo,nodosConEstaciones,false);
 		ORArray<Edge<Double>> aPintar = new ORArray<Edge<Double>>();
 		Iterator<Integer> it = needed.keys();
+		Double costo = 0.0;
 		while(it.hasNext()) {
 			Integer see = it.next();
 			ORArray<Edge<Double>> road = caminos.journey(see);
 			for(Edge<Double> edg: road){
 				aPintar.add(edg);
+				costo += edg.getInfo();
 			}
+		}
+		System.out.println("El costo de este camino que conecta el grafo es: "+ costo);
+		for(Edge<Double> edg: aPintar) {
+			int one = edg.either();
+			int two = edg.other(one);
+			Coordinates onee = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
+			Coordinates twoo = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
 		}
 		//TODO pintelo mi doggo
 	}
