@@ -167,7 +167,12 @@ public class Controller {
 		for(int i = need.getSize()-1, j = 0; i > -1 && j < m;--i,++j)
 			needed.put(g.translate(need.getElement(i).getSecond()), 1);
 		
-		ORArray<Edge<Double>> aPintar = Graph.pruneMST(g, needed);
+		ORArray<Edge<Double>> aPintar = new ORArray<Edge<Double>>();
+		while(needed.getSize() != 0) {
+			ORArray<Edge<Double>> temp = Graph.pruneMST(g, needed);
+			for(Edge<Double> edg: temp)
+				aPintar.add(edg);
+		}
 		double costo = 0.0;
 		for(Edge<Double> edg: aPintar) {
 			costo += edg.getInfo();
@@ -191,7 +196,16 @@ public class Controller {
 		HashTableSC<Integer, Integer> needed = new HashTableSC<Integer, Integer>(200);
 		for(int i = infraccionesNodo.getSize()-1, j = 0; i > -1 && j < m;--i,++j)
 			needed.put(g.translate(infraccionesNodo.getElement(i).getSecond()), 1);
-		ORArray<Edge<Double>> aPintar = Graph.pruneMST(g, needed);
+		ORArray<Edge<Double>> aPintar = new ORArray<Edge<Double>>();
+		while(needed.getSize() != 0) {
+			ORArray<Edge<Double>> temp = Graph.pruneMST(g, needed);
+			for(Edge<Double> edg: temp)
+				aPintar.add(edg);
+		}
+		double costo = 0.0;
+		for(Edge<Double> edg: aPintar) {
+			costo += edg.getInfo();
+		}
 	}
 	
 	/**
