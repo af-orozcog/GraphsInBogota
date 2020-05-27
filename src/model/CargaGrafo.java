@@ -89,14 +89,14 @@ public class CargaGrafo {
 
 		//Para guardar el grafo
 		cargarGrafo();
-		//		saveJSON("./data/GRAFOBENDITO.json");
+		saveJSON("./data/GRAFOBENDITO.json");
 
-		//		try {
-		//			loadJSON("./data/GRAFOBENDITO.json");
-		//		} catch (Exception e) {
-		//			// TODO Auto-generated catch block
-		//			e.printStackTrace();
-		//		}
+//		try {
+//			loadJSON("./data/GRAFOBENDITO.json");
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 
 
 		//				System.out.println("Escribiendo");
