@@ -488,6 +488,7 @@ public class Controller {
 		for(Edge<Double> edg: aPintar) 
 			costo += edg.getInfo();
 		System.out.println("el costo del arbol es: "  + costo);
+		System.out.println("Creando el nuevo arbol para apintar");
 		Graph<Integer,VertexInfo,Double> send = new Graph<Integer,VertexInfo,Double>();
 		for(Edge<Double> ed: aPintar) {
 			int from = ed.either();
@@ -496,10 +497,8 @@ public class Controller {
 			send.addVertex(g.translateInverse(to), g.getInfoVertex(g.translateInverse(to)));
 			send.addEdge(g.translateInverse(from), g.translateInverse(to), ed.getInfo());
 		}
-		System.out.println("el tamanio del grafo en nodos " + aPintar.getSize());
+		System.out.println("Terminando de crear el nuevo arbol para apintar");
 		generarMapa("Arbol mayor comparendos",null,send,null);
-
-
 	}
 
 
@@ -535,11 +534,18 @@ public class Controller {
 		for(Edge<Double> edg: aPintar) 
 			costo += edg.getInfo();
 		System.out.println("el costo del arbol es: "  + costo);
-
-		generarMapa("Arbol mayor Gravedad",aPintar,null,null);
-
-		System.out.println("el tamanio del grafo en nodos " + aPintar.getSize());
-
+		Graph<Integer,VertexInfo,Double> send = new Graph<Integer,VertexInfo,Double>();
+		for(Edge<Double> ed: aPintar) {
+			int from = ed.either();
+			int to = ed.other(from);
+			send.addVertex(g.translateInverse(from), g.getInfoVertex(g.translateInverse(from)));
+			send.addVertex(g.translateInverse(to), g.getInfoVertex(g.translateInverse(to)));
+			send.addEdge(g.translateInverse(from), g.translateInverse(to), ed.getInfo());
+		}
+		System.out.println("Terminando de crear el nuevo arbol para apintar");
+		
+		generarMapa("Arbol mayor Gravedad",null,send,null);
+		//System.out.println("el tamanio del grafo en nodos " + aPintar.getSize());
 
 	}
 
