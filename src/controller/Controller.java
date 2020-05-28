@@ -1,8 +1,7 @@
 package controller;
 
 
-import java.io.IOException;
-import java.util.ArrayList;
+
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -132,6 +131,7 @@ public class Controller {
 			if(info.hasPoliceStation()) nodosConEstaciones.add(val);
 		}
 	}	
+	
 	public void run() 
 	{
 		Scanner lector = new Scanner(System.in);
@@ -215,7 +215,7 @@ public class Controller {
 		Double comp = Double.POSITIVE_INFINITY; 
 		if(val == comp)return;
 		ORArray<Edge<Double>> paint = caminos.journey(idVertice2);
-		System.out.println("tamaño de arcos "+ paint.getSize());
+		System.out.println("tamaï¿½o de arcos "+ paint.getSize());
 		generarMapaAux(grafo,paint,pequeno,grande);
 	}
 
@@ -295,7 +295,7 @@ public class Controller {
 		for(Edge<Double> edg: aPintar) 
 			costo += edg.getInfo();
 		System.out.println("el costo del arbol es: "  + costo);
-		System.out.println("el tamaño del grafo en nodos " + aPintar.getSize());
+		System.out.println("el tamaï¿½o del grafo en nodos " + aPintar.getSize());
 		generarMapaAux(grafo,aPintar,pequeno,grande);
 	}
 
@@ -326,7 +326,7 @@ public class Controller {
 		for(Edge<Double> edg: aPintar) 
 			costo += edg.getInfo();
 		System.out.println("el costo del arbol es: "  + costo);
-		System.out.println("el tamaño del grafo en nodos " + aPintar.getSize());
+		System.out.println("el tamaï¿½o del grafo en nodos " + aPintar.getSize());
 		generarMapaAux(grafo,aPintar,pequeno,grande);
 
 	}

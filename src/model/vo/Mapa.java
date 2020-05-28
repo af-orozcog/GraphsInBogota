@@ -242,8 +242,6 @@ public class Mapa extends MapView
 								}
 							}
 						}
-
-
 						//						System.out.println("Numero de arcos graficados:: "+n);
 						map.fitBounds(new LatLngBounds(min,max));
 						// Setting initial zoom value
