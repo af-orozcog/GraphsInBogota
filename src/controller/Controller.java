@@ -305,7 +305,7 @@ public class Controller {
 	
 	public void generarMapa(String titulo,ORArray<Edge<Double>> paint,Graph<Integer,VertexInfo,Double> g,HashTableSC<Integer,ORArray<Edge<Double>>> pintar )
 	{
-		System.out.println("cual es el sapo hp problema");
+		//System.out.println("cual es el sapo hp problema");
 		Mapa2 example = new Mapa2(titulo);
 		
 
@@ -361,7 +361,7 @@ public class Controller {
 		}
 		else if(pintar!=null)
 		{
-			System.out.println("pero que doble hps!!!");
+			//System.out.println("pero que doble hps!!!");
 			Graph<Integer,VertexInfo,Double> ausar=g;
 			Iterator<Integer> it = pintar.keys();
 			String[]colores= {"#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231", 
@@ -568,8 +568,10 @@ public class Controller {
 		infraccionesNodoGravedad.sort(comp);
 		System.out.println("Terminando de organizar los vertices segun la gravedad de los comparendos");
 		HashTableSC<Integer, Integer> needed = new HashTableSC<Integer, Integer>(200);
-		for(int i = infraccionesNodoGravedad.getSize()-1, j = 0; i > -1 && j < m;--i,++j)
+		for(int i = infraccionesNodoGravedad.getSize()-1, j = 0; i > -1 && j < m;--i,++j) {
+			//System.out.println("id de los nodos "+ infraccionesNodoGravedad.getElement(i).getSecond());
 			needed.put(g.translate(infraccionesNodoGravedad.getElement(i).getSecond()), 1);
+		}
 		ORArray<Edge<Double>> aPintar = new ORArray<Edge<Double>>();
 		System.out.println("Empezando a limpiar el arbol");
 		while(needed.getSize() != 0) {
@@ -613,8 +615,10 @@ public class Controller {
 		infraccionesNodoGravedad.sort(comp);
 		System.out.println("Terminando de organizar los vertices segun la gravedad de los comparendos");
 		HashTableSC<Integer, Integer> needed = new HashTableSC<Integer, Integer>(200);
-		for(int i = infraccionesNodoGravedad.getSize()-1, j = 0; i > -1 && j < m;--i,++j)
+		for(int i = infraccionesNodoGravedad.getSize()-1, j = 0; i > -1 && j < m;--i,++j) {
+		//	System.out.println("id de los nodos "+ infraccionesNodoGravedad.getElement(i).getSecond());
 			needed.put(infraccionesNodoGravedad.getElement(i).getSecond(), 1);
+		}
 		System.out.println("Generando los caminos mas cortos");
 		Dijkstra caminos = new Dijkstra(this.grafo,nodosConEstaciones,false);
 		System.out.println("Terminando de generar los caminos mas cortos");
