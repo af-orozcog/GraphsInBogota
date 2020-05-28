@@ -283,19 +283,19 @@ public class Controller {
 			Edge<Double> primer=paint.getElement(0);
 			//Final
 			Edge<Double> ultimo=paint.getElement(paint.getSize()-1);
-			
+
 			//Primer nodo
 			int one = primer.either();
 			//Ultimo nodo
 			int two = ultimo.either();
-			
+
 			Coordinates onee = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
 			Coordinates twoo = grafo.getInfoVertex(grafo.translateInverse(two)).getCoor();						
 			double lat1 = onee.lat;
 			double lon1 = onee.lon;
 			double lat2 = twoo.lat;
 			double lon2 = twoo.lon;
-			
+
 			example.generateMarker(new LatLng(lat1,lon1));
 			example.generateMarker(new LatLng(lat2,lon2));
 
@@ -339,7 +339,7 @@ public class Controller {
 			for(int color = 1; it.hasNext();++color) {
 				CircleOptions settingsCircle=new CircleOptions();
 				settingsCircle.setFillColor(colores[color-1]);
-				settingsCircle.setRadius(2000000);
+				settingsCircle.setRadius(20);
 				settingsCircle.setFillOpacity(0.35);
 
 				PolylineOptions settingsLine=new PolylineOptions();
@@ -352,17 +352,31 @@ public class Controller {
 
 				ORArray<Edge<Double>> thro =  pintar.get(it.next());
 				for(Edge<Double> edg:  thro) {
-					//todos dentro del for tienen que tener el mismo color :v
 					int one = edg.either();
 					int ot = edg.other(one);
-					Coordinates onee = ausar.getInfoVertex(ausar.translateInverse(one)).getCoordinates();
-					Coordinates twoo = ausar.getInfoVertex(ausar.translateInverse(ot)).getCoordinates();
+
+					VertexInfo v1=ausar.getInfoVertex(ausar.translateInverse(one));
+					VertexInfo v2=ausar.getInfoVertex(ausar.translateInverse(ot));
+					Coordinates onee = v1.getCoordinates();
+					Coordinates twoo = v2.getCoordinates();
 					double lat1 = onee.lat;
 					double lon1 = onee.lon;
 					double lat2 = twoo.lat;
 					double lon2 = twoo.lon;
+
+					if(v1.getPoliceStation()!=-1)
+					{
+						PoliceStation estacion=estaciones.get(v1.getPoliceStation());
+						example.generateMarker(new LatLng(estacion.getEPOLATITUD(),estacion.getEPOLONGITU()));
+						example.generateArea(new LatLng(estacion.getEPOLATITUD(),estacion.getEPOLONGITU()), 20.0);
+					}
+					if(v2.getPoliceStation()!=-1)
+					{
+						PoliceStation estacion=estaciones.get(v2.getPoliceStation());
+						example.generateMarker(new LatLng(estacion.getEPOLATITUD(),estacion.getEPOLONGITU()));
+						example.generateArea(new LatLng(estacion.getEPOLATITUD(),estacion.getEPOLONGITU()), 20.0);
+					}
 					example.generateSimplePath(new LatLng(lat1,lon1), new LatLng(lat2,lon2), false);	
-					//del mismo color esos perros :v
 				}
 			}
 		}
@@ -546,7 +560,7 @@ public class Controller {
 			send.addEdge(g.translateInverse(from), g.translateInverse(to), ed.getInfo());
 		}
 		System.out.println("Terminando de crear el nuevo arbol para apintar");
-		
+
 		generarMapa("Arbol mayor Gravedad",null,send,null);
 		//System.out.println("el tamanio del grafo en nodos " + aPintar.getSize());
 
