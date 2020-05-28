@@ -255,8 +255,6 @@ public class Controller {
 				System.out.println("-----------------------------------------------------------------------");
 				System.out.println("-----------------------------------------------------------------------");
 				System.out.println("-----------------------------------------------------------------------");
-				System.out.println("Por favor digite el numero de comparendos de mayor gravedad que se quiere"
-						+ "utilizar: ");
 				long start6 = System.currentTimeMillis();
 				PoliceStationComponents();
 				long end6 = System.currentTimeMillis();
@@ -483,6 +481,7 @@ public class Controller {
 				aPintar.add(edg);
 		}
 		System.out.println("Terminando de limpiar el arbol");
+		System.out.println("el nuevo numero de edges es: "+ aPintar.getSize());
 		double costo = 0.0;
 		for(Edge<Double> edg: aPintar) 
 			costo += edg.getInfo();
@@ -522,6 +521,7 @@ public class Controller {
 				aPintar.add(edg);
 		}
 		System.out.println("Terminando de limpiar el arbol");
+		System.out.println("el nuevo numero de edges es: "+ aPintar.getSize());
 		double costo = 0.0;
 		for(Edge<Double> edg: aPintar) 
 			costo += edg.getInfo();
@@ -582,6 +582,7 @@ public class Controller {
 		System.out.println("finalizando de asignar a cada estacion de policia los comparendos más cercanos");
 		System.out.println("empezando a generar grafo de distancia minimas");
 		Graph<Integer,VertexInfo,Double> G = caminos.generateGraph();
+		System.out.println("tamanio del grafo vertices "+ G.V() + " edges "+ G.E());
 		System.out.println("terminando de generar grafo de distancia minimas");
 
 
