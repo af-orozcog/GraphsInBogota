@@ -364,11 +364,13 @@ public class Controller {
 					if(v1.getPoliceStation()!=-1)
 					{
 						PoliceStation estacion=estaciones.get(v1.getPoliceStation());
+						example.generateMarker(new LatLng(estacion.getEPOLATITUD(),estacion.getEPOLONGITU()));
 						example.generateArea(new LatLng(estacion.getEPOLATITUD(),estacion.getEPOLONGITU()), 20.0);
 					}
 					if(v2.getPoliceStation()!=-1)
 					{
 						PoliceStation estacion=estaciones.get(v2.getPoliceStation());
+						example.generateMarker(new LatLng(estacion.getEPOLATITUD(),estacion.getEPOLONGITU()));
 						example.generateArea(new LatLng(estacion.getEPOLATITUD(),estacion.getEPOLONGITU()), 20.0);
 					}
 					example.generateSimplePath(new LatLng(lat1,lon1), new LatLng(lat2,lon2), false);	
