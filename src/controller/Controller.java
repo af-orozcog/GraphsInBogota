@@ -173,12 +173,20 @@ public class Controller {
 				System.out.println("-----------------------------------------------------------------------");
 				System.out.println("-----------------------------------------------------------------------");
 				System.out.println("-----------------------------------------------------------------------");
-				System.out.println("Por favor digite el nodo desde donde quiere partir: ");
-				int from1 = lector.nextInt();
-				System.out.println("Por favor digite el nodo al que quiere llegar: ");
-				int to1 = lector.nextInt();
+				System.out.println("Por favor digite la latitud del nodo desde donde quiere partir: ");
+				double from1lat = lector.nextDouble();
+				System.out.println("Por favor digite la longitud del nodo desde donde quiere partir: ");
+				double from1long = lector.nextDouble();
+				System.out.println("Por favor digite la latitud del nodo al que quiere llegar: ");
+				double to1lat = lector.nextDouble();
+				System.out.println("Por favor digite la longitud del nodo al que quiere llegar: ");
+				double to1long = lector.nextDouble();
+				Coordinates from1 = new Coordinates(from1lat, from1long);
+				Coordinates to1 = new Coordinates(to1lat, to1long);
+				int fromm1 = closest(from1);
+				int too1 = closest(to1);
 				long start1 = System.currentTimeMillis();
-				CaminoDistanciaMinima1A(from1,to1);
+				CaminoDistanciaMinima1A(fromm1,too1);
 				long end1 = System.currentTimeMillis();
 				System.out.println("el tiempo que toma al algoritmo encontrar la respuesta y dibujar el camino"
 						+ "es: " + (end1-start1));
@@ -206,12 +214,20 @@ public class Controller {
 				System.out.println("-----------------------------------------------------------------------");
 				System.out.println("-----------------------------------------------------------------------");
 				System.out.println("-----------------------------------------------------------------------");
-				System.out.println("Por favor digite el nodo desde donde quiere partir: ");
-				int from3 = lector.nextInt();
-				System.out.println("Por favor digite el nodo al que quiere llegar: ");
-				int to3 = lector.nextInt();
+				System.out.println("Por favor digite la latitud del nodo desde donde quiere partir: ");
+				double from3lat = lector.nextDouble();
+				System.out.println("Por favor digite la longitud del nodo desde donde quiere partir: ");
+				double from3long = lector.nextDouble();
+				System.out.println("Por favor digite la latitud del nodo al que quiere llegar: ");
+				double to3lat = lector.nextDouble();
+				System.out.println("Por favor digite la longitud del nodo al que quiere llegar: ");
+				double to3long = lector.nextDouble();
+				Coordinates from3 = new Coordinates(from3lat, from3long);
+				Coordinates to3 = new Coordinates(to3lat, to3long);
+				int fromm3 = closest(from3);
+				int too3 = closest(to3);
 				long start3 = System.currentTimeMillis();
-				CaminoDistanciaMinima1B(from3, to3);
+				CaminoDistanciaMinima1A(fromm3,too3);
 				long end3 = System.currentTimeMillis();
 				System.out.println("el tiempo que toma al algoritmo encontrar la respuesta y dibujar el camino"
 						+ "es: " + (end3-start3));
@@ -271,6 +287,22 @@ public class Controller {
 
 	}
 
+	
+	public int closest(Coordinates val) {
+		Iterator<Integer> it = grafo.vertices();
+		int who = -1;
+		double dist = 1000000000000.0;
+		while(it.hasNext()) {
+			Integer node = it.next();
+			VertexInfo info = grafo.getInfoVertex(node);
+			double comp = CargaGrafo.haversine(info.getCoor(), val);
+			if(comp < dist) {who = node;dist = comp;}
+		}
+		return who;
+	}
+	
+	
+	
 	public void generarMapa(String titulo,ORArray<Edge<Double>> paint,Graph<Integer,VertexInfo,Double> g,HashTableSC<Integer,ORArray<Edge<Double>>> pintar )
 	{
 		System.out.println("cual es el sapo hp problema");
