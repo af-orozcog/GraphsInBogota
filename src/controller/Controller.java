@@ -21,6 +21,7 @@ import model.data_structures.ORArray;
 import model.data_structures.PairComp;
 import model.vo.Coordinates;
 import model.vo.Mapa;
+import model.vo.PoliceStation;
 import model.vo.VertexInfo;
 
 
@@ -40,7 +41,7 @@ public class Controller {
 
 	private Comparable<Comparendo>[] consulta;
 	HashTableLP<Integer,Comparendo> comparendos;
-
+	HashTableLP<Integer,PoliceStation> estaciones;
 	CargaGrafo cargaDatos;
 	LatLng pequeno;
 	LatLng grande;
@@ -55,6 +56,7 @@ public class Controller {
 		grafo=cargaDatos.g;
 		nodosConEstaciones=cargaDatos.nodosConEstaciones;
 		comparendos=cargaDatos.comparendos;
+		estaciones=cargaDatos.estaciones;
 		pequeno=new LatLng(cargaDatos.latmin,cargaDatos.lonmin);
 		grande=new LatLng(cargaDatos.latmax,cargaDatos.lonmax);
 	}	

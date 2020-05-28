@@ -25,6 +25,7 @@ public class CargaGrafo {
 	public static Graph<Integer,VertexInfo,Double> g = new Graph<Integer,VertexInfo,Double>();
 	public static ORArray<Integer> nodosConEstaciones=new ORArray<Integer>();
 	public static HashTableLP<Integer,Comparendo> comparendos=new HashTableLP<Integer,Comparendo>(250000);
+	public static HashTableLP<Integer,PoliceStation> estaciones=new HashTableLP<Integer,PoliceStation>(21);
 	public static double latmin;
 	public static double latmax;
 	public static double lonmin;
@@ -35,6 +36,7 @@ public class CargaGrafo {
 		try {
 			loadJSON("./data/GRAFOBENDITO.json");
 			cargarInfracciones();
+			cargarEstaciones();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -94,10 +96,10 @@ public class CargaGrafo {
 
 
 		//Para guardar el grafo
-		cargarGrafo();
-		cargarInfracciones();
-		saveJSON("./data/GRAFOBENDITO.json");
-
+		//		cargarGrafo();
+		//		cargarInfracciones();
+		//		saveJSON("./data/GRAFOBENDITO.json");
+		//		cargarEstaciones();
 		//		try {
 		//			loadJSON("./data/GRAFOBENDITO.json");
 		//		} catch (Exception e) {
@@ -309,6 +311,29 @@ public class CargaGrafo {
 
 	}
 
+
+	private static void cargarEstaciones()
+	{	
+		Gson gson=new Gson();
+
+		try {
+
+			BufferedReader br = new BufferedReader(new FileReader("./data/estaciones.geojson"));
+
+			//convert the json string back to object
+			Lista obj = gson.fromJson(br, Lista.class);
+			for (Features2 feature : obj.getInfo().getFeatures()) {
+				PoliceStation estacion=feature.getEstacion();
+				estaciones.put(estacion.getOBJECTID(), estacion);
+			}
+
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
 	private static Double toRad(Double value) {
 		return value * Math.PI / 180;
 	}
@@ -357,6 +382,7 @@ public class CargaGrafo {
 	}
 }
 
+//Para cargar grafo
 class Vertice{
 	int indice;
 	Double lat;
@@ -546,7 +572,7 @@ class Geometrias
 
 }
 
-
+//Para cargar Comparendos
 class Listado {
 	Informacion listado;
 	public Informacion getInfo()
@@ -598,4 +624,44 @@ class Geometry{
 		return coordinates;
 	}
 }
+
+
+//
+//Para cargar Estaciones
+class Lista {
+	Informacion2 lista;
+	public Informacion2 getInfo()
+	{
+		return this.lista;
+	}
+	@Override
+	public String toString() {
+		return "Lista [lista=" + lista + "]";
+	}
+}
+
+class Informacion2{
+	String type;
+	Crs crs;
+	Features2[] features;
+	public Features2[] getFeatures() {
+		return features;
+	}
+}
+
+class Features2{
+	String type;
+	PoliceStation properties;
+	Geometry geometry;
+	public PoliceStation getEstacion()
+	{
+		return properties;
+	}
+	public Geometry getGeometry()
+	{
+		return geometry;
+	}
+}
+
+
 
