@@ -135,7 +135,8 @@ public class Controller {
 				Gravedad needAdd = new Gravedad(comparendos.get(idd).getTIPO_SERVICIO(),comparendos.get(idd).getINFRACCION());
 				infraccionesNodoGravedad.add(new PairComp<Gravedad,Integer>(needAdd,val));
 			}
-			if(info.hasPoliceStation()) nodosConEstaciones.add(val);
+			Integer pol = info.getPoliceStation();
+			if(pol != -1) nodosConEstaciones.add(val);
 		}
 		System.out.println("******************* Información de la carga *******************");
 		System.out.println("Comparendos en el archivo: "+ comparendos.getSize());
@@ -310,7 +311,7 @@ public class Controller {
 		}
 		else if(g!=null && pintar==null) {
 
-			Graph<Integer,VertexInfo,Double> ausar=grafo;
+			Graph<Integer,VertexInfo,Double> ausar=g;
 			Iterator<Edge<Double>> arcos= ausar.edges().iterator();
 			while(arcos.hasNext())
 			{
@@ -326,6 +327,7 @@ public class Controller {
 		}
 		else if(pintar!=null)
 		{
+			Graph<Integer,VertexInfo,Double> ausar=g;
 			Iterator<Integer> it = pintar.keys();
 			String[]colores= {"#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231", 
 					"#911eb4", "#46f0f0", "#f032e6", "#bcf60c", "#fabebe", "#008080",
@@ -350,8 +352,8 @@ public class Controller {
 					//todos dentro del for tienen que tener el mismo color :v
 					int one = edg.either();
 					int ot = edg.other(one);
-					Coordinates onee = g.getInfoVertex(g.translateInverse(one)).getCoordinates();
-					Coordinates twoo = g.getInfoVertex(g.translateInverse(ot)).getCoordinates();
+					Coordinates onee = ausar.getInfoVertex(ausar.translateInverse(one)).getCoordinates();
+					Coordinates twoo = ausar.getInfoVertex(ausar.translateInverse(ot)).getCoordinates();
 					double lat1 = onee.lat;
 					double lon1 = onee.lon;
 					double lat2 = twoo.lat;
@@ -455,7 +457,7 @@ public class Controller {
 		Iterator<Integer> it = g.vertices();
 		while(it.hasNext()) {
 			int val = it.next();
-			vertex.add(new PairComp<Integer, VertexInfo>(val, grafo.getInfoVertex(g.translateInverse(val))));
+			vertex.add(new PairComp<Integer, VertexInfo>(val, g.getInfoVertex(val)));
 		}
 		ORArray<PairComp<Double, Integer>> need = new ORArray<PairComp<Double,Integer>>();
 		for(int i = 0; i < vertex.getSize();++i) 
@@ -486,10 +488,17 @@ public class Controller {
 		for(Edge<Double> edg: aPintar) 
 			costo += edg.getInfo();
 		System.out.println("el costo del arbol es: "  + costo);
-
-		generarMapa("Arbol mayor comparendos",aPintar,null,null);
-
+		Graph<Integer,VertexInfo,Double> send = new Graph<Integer,VertexInfo,Double>();
+		for(Edge<Double> ed: aPintar) {
+			int from = ed.either();
+			int to = ed.other(from);
+			send.addVertex(g.translateInverse(from), g.getInfoVertex(g.translateInverse(from)));
+			send.addVertex(g.translateInverse(to), g.getInfoVertex(g.translateInverse(to)));
+			send.addEdge(g.translateInverse(from), g.translateInverse(to), ed.getInfo());
+		}
 		System.out.println("el tamanio del grafo en nodos " + aPintar.getSize());
+		generarMapa("Arbol mayor comparendos",null,send,null);
+
 
 	}
 
@@ -584,10 +593,39 @@ public class Controller {
 		Graph<Integer,VertexInfo,Double> G = caminos.generateGraph();
 		System.out.println("tamanio del grafo vertices "+ G.V() + " edges "+ G.E());
 		System.out.println("terminando de generar grafo de distancia minimas");
-
-
-		HashTableSC<Integer,ORArray<Edge<Double>>> pintar = Graph.ConnectedComponent(G);
-
+		ORArray<PairComp<Integer, VertexInfo>> vertex = new ORArray<PairComp<Integer, VertexInfo>>();
+		Iterator<Integer> it = G.vertices();
+		while(it.hasNext()) {
+			int val = it.next();
+			vertex.add(new PairComp<Integer, VertexInfo>(val, grafo.getInfoVertex(val)));
+		}
+		HashTableSC<Integer, Integer> needed = new HashTableSC<Integer, Integer>(200);
+		for(int i = 0; i < vertex.getSize();++i) 
+			if(vertex.getElement(i).getSecond().getInfo2() != 0.0)
+				needed.put(G.translate(vertex.getElement(i).getFirst()), 1);
+		for(Integer val: nodosConEstaciones) 
+			needed.put(G.translate(val), 1);
+		ORArray<Edge<Double>> aPintar = new ORArray<Edge<Double>>();
+		System.out.println("Empezando a limpiar el arbol");
+		while(needed.getSize() != 0) {
+			ORArray<Edge<Double>> temp = Graph.pruneMST(G, needed);
+			for(Edge<Double> edg: temp)
+				aPintar.add(edg);
+			//System.out.println("tamanio needed: " + needed.getSize());
+		}
+		System.out.println("Terminando de limpiar el arbol");
+		System.out.println("el nuevo numero de edges es: "+ aPintar.getSize());
+		System.out.println("Generando de nuevo el grafo a pintar");
+		Graph<Integer,VertexInfo,Double> grafoPintar = new Graph<Integer, VertexInfo, Double>();
+		for(Edge<Double> edg: aPintar) {
+			grafoPintar.addVertex(G.translateInverse(edg.either()),G.getInfoVertex(G.translateInverse(edg.either())));
+			grafoPintar.addVertex(G.translateInverse(edg.other(edg.either())),G.getInfoVertex(G.translateInverse(edg.other(edg.either()))));
+			grafoPintar.addEdge(G.translateInverse(edg.either()), G.translateInverse(edg.other(edg.either())), G.getInfoArc(G.translateInverse(edg.either()), G.translateInverse(edg.other(edg.either()))));
+		}
+		System.out.println("Terminando de generar el grafo a pintar");
+		System.out.println("Empezando a generar los componentes conectados");
+		HashTableSC<Integer,ORArray<Edge<Double>>> pintar = Graph.ConnectedComponent(grafoPintar);
+		System.out.println("Terminando de generar los componentes conectados");
 
 		generarMapa("Componentes estación de policía",null,G,pintar);
 

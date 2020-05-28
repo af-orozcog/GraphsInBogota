@@ -4,9 +4,13 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import java.util.Iterator;
 
+import model.data_structures.Edge;
 import model.data_structures.Graph;
+import model.data_structures.HashTableSC;
+import model.data_structures.ORArray;
 import model.data_structures.Pair;
 import model.data_structures.RedBlackBST;
+import model.vo.VertexInfo;
 
 
 
@@ -241,5 +245,25 @@ public class GraphTest {
 		}
 		assertEquals("el numero de adyacentes no es el correcto", count,3);
 	}
-
+	
+	@Test
+	public void pruneTest() {
+		Graph<Integer,VertexInfo,Double> numero = new Graph<Integer, VertexInfo, Double>();
+		numero.addVertex(1, null);
+		numero.addVertex(2, null);
+		numero.addVertex(3, null);
+		numero.addVertex(4, null);
+		numero.addVertex(5, null);
+		numero.addEdge(1, 2, 1.0);
+		numero.addEdge(2, 3, 1.0);
+		numero.addEdge(3, 4, 1.0);
+		numero.addEdge(2, 5, 1.0);
+		HashTableSC<Integer, Integer> needed = new HashTableSC<Integer, Integer>(200);
+		needed.put(0, 1);
+		needed.put(3,1);
+		ORArray<Edge<Double>> wut = Graph.pruneMST(numero, needed);
+		//for(Edge<Double> edg:wut) 
+			//System.out.println(edg.either() + " " + edg.other(edg.either()));
+		assertTrue("cual es la sapa joda",wut.getSize() == 3);
+	}
 }

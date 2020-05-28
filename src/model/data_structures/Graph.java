@@ -298,7 +298,7 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 		ORArray<Edge<Double>> ans = new ORArray<Edge<Double>>();
 		Integer fi = needed.keys().next();
 		boolean marked[] = new boolean[graph.V()];
-		modifiedDFS(graph.translate(fi),graph,needed,ans,marked);
+		modifiedDFS(fi,graph,needed,ans,marked);
 		return ans;
 	}
 	
@@ -315,7 +315,9 @@ public class Graph <K extends Comparable<K>,V,A extends Comparable<A>> {
 			boolean marked[]) {
 		marked[t] = true;
 		boolean ret = false;
-		if(needed.contains(t)) {ret = true; needed.delete(t);}
+		if(needed.contains(t)) {
+			ret = true; needed.delete(t);
+		}
 		Iterator<Integer> it = graph.adj(graph.translateInverse(t));
 		while(it.hasNext()) {
 			Integer ad = it.next();

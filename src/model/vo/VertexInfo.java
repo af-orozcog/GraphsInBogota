@@ -35,6 +35,7 @@ public class VertexInfo implements IInfoVertex{
 		setCoordinates(pCoor);
 		infractions = new ORArray<Integer>();
 		average = null;
+		policeStation = null;
 		id=pId;
 	}
 	
