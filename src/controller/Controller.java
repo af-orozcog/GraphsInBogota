@@ -132,7 +132,6 @@ public class Controller {
 		System.out.println("La distancia mas corta entre ambos puntos es: "+ caminos.distance(idVertice2));
 		if(caminos.distance(idVertice2) == Double.MAX_VALUE)return;
 		ORArray<Edge<Double>> paint = caminos.journey(idVertice2);
-		System.out.println(paint.getSize()+"HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 		generarMapaAux(grafo,paint,pequeno,grande);
 	}
 
@@ -171,6 +170,7 @@ public class Controller {
 			g.addVertex(grafo.translateInverse(to), grafo.getInfoVertex(grafo.translateInverse(to)));
 			g.addEdge(grafo.translateInverse(from), grafo.translateInverse(to), ed.getInfo());
 		}
+		generarMapaGrafo(g, pequeno, grande, false, null);
 		return g;
 	}
 
@@ -241,12 +241,8 @@ public class Controller {
 		for(Edge<Double> edg: aPintar) 
 			costo += edg.getInfo();
 		System.out.println("el costo del arbol es: "  + costo);
-		for(Edge<Double> edg: aPintar) {
-			int one = edg.either();
-			int two = edg.other(one);
-			Coordinates onee = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
-			Coordinates twoo = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
-		}
+		generarMapaAux(grafo,aPintar,pequeno,grande);
+
 	}
 
 	/**
@@ -278,13 +274,8 @@ public class Controller {
 			}
 		}
 		System.out.println("El costo de este camino que conecta el grafo es: "+ costo);
-		for(Edge<Double> edg: aPintar) {
-			int one = edg.either();
-			int two = edg.other(one);
-			Coordinates onee = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
-			Coordinates twoo = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
-		}
-		//TODO pintelo mi doggo
+		generarMapaAux(grafo,aPintar,pequeno,grande);
+
 	}
 
 	/**
