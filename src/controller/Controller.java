@@ -132,7 +132,6 @@ public class Controller {
 		System.out.println("La distancia mï¿½s corta entre ambos puntos es: "+ caminos.distance(grafo.translateInverse(idVertice2)));
 		if(caminos.distance(grafo.translateInverse(idVertice2)) == Double.MAX_VALUE)return;
 		ORArray<Edge<Double>> paint = caminos.journey(grafo.translateInverse(idVertice2));
-		System.out.println(paint.getSize()+"HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 		generarMapaAux(grafo,paint,pequeño,grande);
 	}
 

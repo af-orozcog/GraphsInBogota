@@ -3,6 +3,7 @@ import com.teamdev.jxmaps.LatLng;
 import com.teamdev.jxmaps.Map;
 import com.teamdev.jxmaps.MapReadyHandler;
 import com.teamdev.jxmaps.MapStatus;
+import com.teamdev.jxmaps.Marker;
 import com.teamdev.jxmaps.Polyline;
 import com.teamdev.jxmaps.PolylineOptions;
 import com.teamdev.jxmaps.swing.MapView;
@@ -47,13 +48,13 @@ public class Mapa extends MapView
 				{
 					// Getting the associated map objec
 					final Map map = getMap();
-					
-					
+
+
 					//Contador de vertices
 					int n = 0;
 					ArrayList<Polyline> arcos = new ArrayList<Polyline>();					
-					
-					
+
+
 					//Opciones para imprimir el mapa.
 					PolylineOptions options = new PolylineOptions();
 					// Setting geodesic property value
@@ -85,6 +86,17 @@ public class Mapa extends MapView
 						if(n <paint.getSize() && lat1 >= min.getLat() && lat1 <= max.getLat() && lon1 >= min.getLng() && lon1 <= max.getLng()
 								&& lat2 >= min.getLat() && lat2 <= max.getLat() && lon2 >= min.getLng() && lon2 <= max.getLng()) 
 						{
+
+
+							if(n==0) {
+								Marker marker=new Marker(map);
+								marker.setPosition(new LatLng(lat1,lon1));
+							}
+							if(n==paint.getSize()-1)
+							{
+								Marker marker2=new Marker(map);
+								marker2.setPosition(new LatLng(lat2,lon2));
+							}
 							LatLng[] path = {new LatLng(lat1,lon1),new LatLng(lat2,lon2)};
 							arcos.add(new Polyline(map));
 							arcos.get(arcos.size()-1).setPath(path);
@@ -162,15 +174,19 @@ public class Mapa extends MapView
 							{
 
 								LatLng[] path = {new LatLng(lat1,lon1),new LatLng(lat2,lon2)};
+
 								arcos.add(new Polyline(map));
 								arcos.get(arcos.size()-1).setPath(path);
 								arcos.get(arcos.size()-1).setOptions(options);
+
 								circulos.add(new Circle(map));
 								circulos.get(circulos.size()-1).setCenter(new LatLng(lat1,lon1));
 								circulos.get(circulos.size()-1).setOptions(op);
 								circulos.add(new Circle(map));
 								circulos.get(circulos.size()-1).setCenter(new LatLng(lat2,lon2));
 								circulos.get(circulos.size()-1).setOptions(op);
+
+
 								n++;
 							}
 						}
