@@ -114,6 +114,7 @@ public class Controller {
 
 				break;
 			case 4:
+				generarMapaGrafo(grafo,pequeno,grande, false, null);
 
 			}
 		}

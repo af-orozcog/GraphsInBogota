@@ -169,7 +169,7 @@ public class Mapa extends MapView
 							double lon2 = info2.getCoordinates().lon;
 
 
-							if(n <5000 && lat1 >= min.getLat() && lat1 <= max.getLat() && lon1 >= min.getLng() && lon1 <= max.getLng()
+							if(n <mapa.V() && lat1 >= min.getLat() && lat1 <= max.getLat() && lon1 >= min.getLng() && lon1 <= max.getLng()
 									&& lat2 >= min.getLat() && lat2 <= max.getLat() && lon2 >= min.getLng() && lon2 <= max.getLng()) 
 							{
 
@@ -179,12 +179,12 @@ public class Mapa extends MapView
 								arcos.get(arcos.size()-1).setPath(path);
 								arcos.get(arcos.size()-1).setOptions(options);
 
-								circulos.add(new Circle(map));
-								circulos.get(circulos.size()-1).setCenter(new LatLng(lat1,lon1));
-								circulos.get(circulos.size()-1).setOptions(op);
-								circulos.add(new Circle(map));
-								circulos.get(circulos.size()-1).setCenter(new LatLng(lat2,lon2));
-								circulos.get(circulos.size()-1).setOptions(op);
+//								circulos.add(new Circle(map));
+//								circulos.get(circulos.size()-1).setCenter(new LatLng(lat1,lon1));
+//								circulos.get(circulos.size()-1).setOptions(op);
+//								circulos.add(new Circle(map));
+//								circulos.get(circulos.size()-1).setCenter(new LatLng(lat2,lon2));
+//								circulos.get(circulos.size()-1).setOptions(op);
 
 
 								n++;
