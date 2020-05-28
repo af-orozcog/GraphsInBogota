@@ -42,7 +42,7 @@ public class Controller {
 	HashTableLP<Integer,Comparendo> comparendos;
 
 	CargaGrafo cargaDatos;
-	LatLng peque�o;
+	LatLng pequeno;
 	LatLng grande;
 
 	/**
@@ -55,7 +55,7 @@ public class Controller {
 		grafo=cargaDatos.g;
 		nodosConEstaciones=cargaDatos.nodosConEstaciones;
 		comparendos=cargaDatos.comparendos;
-		peque�o=new LatLng(cargaDatos.latmin,cargaDatos.lonmin);
+		pequeno=new LatLng(cargaDatos.latmin,cargaDatos.lonmin);
 		grande=new LatLng(cargaDatos.latmax,cargaDatos.lonmax);
 	}	
 	public void run() 
@@ -129,11 +129,11 @@ public class Controller {
 		ORArray<Integer> send = new ORArray<Integer>();
 		send.add(idVertice1);
 		Dijkstra caminos = new Dijkstra(this.grafo,send,false);
-		System.out.println("La distancia m�s corta entre ambos puntos es: "+ caminos.distance(grafo.translateInverse(idVertice2)));
+		System.out.println("La distancia mas corta entre ambos puntos es: "+ caminos.distance(idVertice2));
 		if(caminos.distance(idVertice2) == Double.MAX_VALUE)return;
 		ORArray<Edge<Double>> paint = caminos.journey(idVertice2);
 		System.out.println(paint.getSize()+"HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-		generarMapaAux(grafo,paint,peque�o,grande);
+		generarMapaAux(grafo,paint,pequeno,grande);
 	}
 
 	/**
@@ -150,7 +150,7 @@ public class Controller {
 		System.out.println("La distancia m�s corta entre ambos puntos es, seg�n numero de infracciones: "+ caminos.distance(idVertice2));
 		if(caminos.distance(idVertice2) == Double.MAX_VALUE)return;
 		ORArray<Edge<Double>> paint = caminos.journey(idVertice2);
-		generarMapaAux(grafo,paint,peque�o,grande);
+		generarMapaAux(grafo,paint,pequeno,grande);
 	}
 
 	/**
@@ -211,7 +211,7 @@ public class Controller {
 		for(Edge<Double> edg: aPintar) 
 			costo += edg.getInfo();
 		System.out.println("el costo del arbol es: "  + costo);
-		generarMapaAux(grafo,aPintar,peque�o,grande);
+		generarMapaAux(grafo,aPintar,pequeno,grande);
 	}
 
 
