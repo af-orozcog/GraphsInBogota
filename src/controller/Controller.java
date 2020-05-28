@@ -137,8 +137,18 @@ public class Controller {
 			}
 			if(info.hasPoliceStation()) nodosConEstaciones.add(val);
 		}
-		
-		
+		System.out.println("******************* Información de la carga *******************");
+		System.out.println("Comparendos en el archivo: "+ comparendos.getSize());
+		System.out.println("Comparendo con mayor OBJECTID: "+ cargaDatos.mayor);
+		System.out.println("Estaciones en el archivo: "+ estaciones.getSize());
+		System.out.println("Estación con mayor OBJECTID: "+ cargaDatos.bigEst);
+		System.out.println("Vértices en el grafo: "+ grafo.V());
+		VertexInfo verticeGrande=grafo.getInfoVertex(cargaDatos.vertMax);
+		System.out.println("Vértice con mayor ID: "+verticeGrande.getId()+" Latitud: "+verticeGrande.getCoordinates().lat+" Longitud: "+verticeGrande.getCoordinates().lon );
+		System.out.println("Arcos en el grafo: "+ grafo.E());
+		System.out.println("Arco con mayor ID: IDOrigen: "+cargaDatos.arcMax[0]  +" IDDestino: "+cargaDatos.arcMax[1]+ " Distancia: "+grafo.getInfoArc(cargaDatos.arcMax[0], cargaDatos.arcMax[1]));
+		System.out.println("Arco con mayor longitud: IDOrigen: "+cargaDatos.distMax[0]  +" IDDestino: "+cargaDatos.distMax[1]+ " Distancia: "+grafo.getInfoArc(cargaDatos.distMax[0], cargaDatos.distMax[1]));
+		System.out.println("***************************************************************");		
 	}	
 
 	public void run() 
