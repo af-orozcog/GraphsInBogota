@@ -27,24 +27,84 @@ import model.vo.VertexInfo;
 
 public class Controller {
 
-	/* Instancia del Modelo*/
-	//private Modelo modelo;
+	class Gravedad implements Comparable<Gravedad>{
+		/**
+		 * 
+		 */
+		private String TipoServicio;
 
-	/* Instancia de la Vista*/
-	//private View view;
+		/**
+		 * 
+		 */
+		private String infraccion;
+		
+		public Gravedad(String tipoServicio, String infraccion) {
+			this.TipoServicio = tipoServicio;
+			this.infraccion = infraccion;
+		}
+		
+		@Override
+		/**
+		 * 
+		 */
+		public int compareTo(Gravedad o) {
+			if(o.TipoServicio.compareTo(this.TipoServicio) == 0 )
+				return infraccion.compareTo(o.infraccion);
+			if(TipoServicio.compareTo("Publico") == 0) return 1;
+			if(o.TipoServicio.compareTo("Publico") == 0) return 1;
+			if(TipoServicio.compareTo("Oficial") == 0) return 1;
+			return 0;
+		}
+		
+	}
 
-	Graph<Integer,VertexInfo,Double> grafo = new Graph<Integer,VertexInfo,Double>();
+	/**
+	 * grafo de bogota
+	 */
+	private Graph<Integer,VertexInfo,Double> grafo = new Graph<Integer,VertexInfo,Double>();
 
-	ORArray<PairComp<Integer, Integer>> infraccionesNodo;
+	/**
+	 * 
+	 */
+	private ORArray<PairComp<Gravedad, Integer>> infraccionesNodoGravedad;
+	
+	
+	//ORArray<Pair<Integer,Integer>> infraccionesNodoCantidad;
 
-	ORArray<Integer> nodosConEstaciones; 
-
+	/**
+	 * 
+	 */
+	private ORArray<Integer> nodosConEstaciones; 
+	
+	/**
+	 * 
+	 */
 	private Comparable<Comparendo>[] consulta;
-	HashTableLP<Integer,Comparendo> comparendos;
-	HashTableLP<Integer,PoliceStation> estaciones;
-	CargaGrafo cargaDatos;
-	LatLng pequeno;
-	LatLng grande;
+	
+	/**
+	 * 
+	 */
+	private HashTableLP<Integer,Comparendo> comparendos;
+	
+	/**
+	 * 
+	 */
+	private HashTableLP<Integer,PoliceStation> estaciones;
+	
+	/**
+	 * 
+	 */
+	private CargaGrafo cargaDatos;
+	
+	/**
+	 * 
+	 */
+	private LatLng pequeno;
+	
+	/**
+	 * 
+	 */
+	private LatLng grande;
 
 	/**
 	 * Crear la vista y el modelo del proyecto
@@ -59,6 +119,18 @@ public class Controller {
 		estaciones=cargaDatos.estaciones;
 		pequeno=new LatLng(cargaDatos.latmin,cargaDatos.lonmin);
 		grande=new LatLng(cargaDatos.latmax,cargaDatos.lonmax);
+		Iterator<Integer> vertices = grafo.vertices();
+		infraccionesNodoGravedad = new ORArray<PairComp<Gravedad, Integer>>();
+		nodosConEstaciones = new ORArray<Integer>();
+		while(vertices.hasNext()) {
+			Integer val = vertices.next();
+			VertexInfo info = grafo.getInfoVertex(val);
+			for(Integer idd : info.getInfractions()) {
+				Gravedad needAdd = new Gravedad(comparendos.get(idd).getTIPO_SERVICIO(),comparendos.get(idd).getINFRACCION());
+				infraccionesNodoGravedad.add(new PairComp<Gravedad,Integer>(needAdd,val));
+			}
+			if(info.hasPoliceStation()) nodosConEstaciones.add(val);
+		}
 	}	
 	public void run() 
 	{
@@ -92,16 +164,23 @@ public class Controller {
 				PoliceStationComponents();
 				break;
 			case 3:
+				break;
+			case 4:
 				System.out.println("-----------------------------------------------------------------------");
 				System.out.println("-----------------------------------------------------------------------");
 				System.out.println("-----------------------------------------------------------------------");
 				System.out.println("Por favor digite el numero de comparendos de mayor gravedad que se quiere"
 						+ "utilizar: ");
 				int m = lector.nextInt();
-
+				long start2 = System.currentTimeMillis();
+				ArbolMayorGravedad(m);
+				long end2 = System.currentTimeMillis();
+				System.out.println("el tiempo que toma al algoritmo encontrar la respuesta y dibujar el camino"
+						+ "es: " + (end2-start2));
+				System.out.println("-----------------------------------------------------------------------");
+				System.out.println("-----------------------------------------------------------------------");
+				System.out.println("-----------------------------------------------------------------------");
 				break;
-			case 4:
-
 			}
 		}
 
@@ -136,6 +215,7 @@ public class Controller {
 		Double comp = Double.POSITIVE_INFINITY; 
 		if(val == comp)return;
 		ORArray<Edge<Double>> paint = caminos.journey(idVertice2);
+		System.out.println("tamaño de arcos "+ paint.getSize());
 		generarMapaAux(grafo,paint,pequeno,grande);
 	}
 
@@ -174,7 +254,7 @@ public class Controller {
 			g.addVertex(grafo.translateInverse(to), grafo.getInfoVertex(grafo.translateInverse(to)));
 			g.addEdge(grafo.translateInverse(from), grafo.translateInverse(to), ed.getInfo());
 		}
-		generarMapaGrafo(g, pequeno, grande, false, null);
+		//generarMapaGrafo(g, pequeno, grande, false, null);
 		return g;
 	}
 
@@ -215,6 +295,7 @@ public class Controller {
 		for(Edge<Double> edg: aPintar) 
 			costo += edg.getInfo();
 		System.out.println("el costo del arbol es: "  + costo);
+		System.out.println("el tamaño del grafo en nodos " + aPintar.getSize());
 		generarMapaAux(grafo,aPintar,pequeno,grande);
 	}
 
@@ -225,16 +306,16 @@ public class Controller {
 	 */
 	public void ArbolMayorGravedad(int m) {
 		Graph<Integer,VertexInfo,Double> g = MST();
-		Comparator<PairComp<Integer,Integer>> comp = new Comparator<PairComp<Integer,Integer>>() {
+		Comparator<PairComp<Gravedad,Integer>> comp = new Comparator<PairComp<Gravedad,Integer>>() {
 			@Override
-			public int compare(PairComp<Integer, Integer> o1, PairComp<Integer, Integer> o2) {
+			public int compare(PairComp<Gravedad, Integer> o1, PairComp<Gravedad, Integer> o2) {
 				return o1.getFirst().compareTo(o2.getFirst());
 			}
 		};
-		infraccionesNodo.sort(comp);
+		infraccionesNodoGravedad.sort(comp);
 		HashTableSC<Integer, Integer> needed = new HashTableSC<Integer, Integer>(200);
-		for(int i = infraccionesNodo.getSize()-1, j = 0; i > -1 && j < m;--i,++j)
-			needed.put(g.translate(infraccionesNodo.getElement(i).getSecond()), 1);
+		for(int i = infraccionesNodoGravedad.getSize()-1, j = 0; i > -1 && j < m;--i,++j)
+			needed.put(g.translate(infraccionesNodoGravedad.getElement(i).getSecond()), 1);
 		ORArray<Edge<Double>> aPintar = new ORArray<Edge<Double>>();
 		while(needed.getSize() != 0) {
 			ORArray<Edge<Double>> temp = Graph.pruneMST(g, needed);
@@ -245,6 +326,7 @@ public class Controller {
 		for(Edge<Double> edg: aPintar) 
 			costo += edg.getInfo();
 		System.out.println("el costo del arbol es: "  + costo);
+		System.out.println("el tamaño del grafo en nodos " + aPintar.getSize());
 		generarMapaAux(grafo,aPintar,pequeno,grande);
 
 	}
@@ -254,17 +336,17 @@ public class Controller {
 	 * @param m
 	 */
 	public void shortestPathsPolice(int m) {
-		Comparator<PairComp<Integer,Integer>> comp = new Comparator<PairComp<Integer,Integer>>() {
+		Comparator<PairComp<Gravedad,Integer>> comp = new Comparator<PairComp<Gravedad,Integer>>() {
 			@Override
-			public int compare(PairComp<Integer, Integer> o1, PairComp<Integer, Integer> o2) {
+			public int compare(PairComp<Gravedad, Integer> o1, PairComp<Gravedad, Integer> o2) {
 				return o1.getFirst().compareTo(o2.getFirst());
 			}
 		};
 
-		infraccionesNodo.sort(comp);
+		infraccionesNodoGravedad.sort(comp);
 		HashTableSC<Integer, Integer> needed = new HashTableSC<Integer, Integer>(200);
-		for(int i = infraccionesNodo.getSize()-1, j = 0; i > -1 && j < m;--i,++j)
-			needed.put(infraccionesNodo.getElement(i).getSecond(), 1);
+		for(int i = infraccionesNodoGravedad.getSize()-1, j = 0; i > -1 && j < m;--i,++j)
+			needed.put(infraccionesNodoGravedad.getElement(i).getSecond(), 1);
 		Dijkstra caminos = new Dijkstra(this.grafo,nodosConEstaciones,false);
 		ORArray<Edge<Double>> aPintar = new ORArray<Edge<Double>>();
 		Iterator<Integer> it = needed.keys();
@@ -289,7 +371,7 @@ public class Controller {
 	public void PoliceStationComponents() {
 		Dijkstra caminos = new Dijkstra(this.grafo,nodosConEstaciones,false);
 		Graph<Integer,VertexInfo,Double> G = caminos.generateGraph();
-		HashTableSC<Integer,ORArray<Edge<Double>>> pintar = Graph.ConnectedComponent(grafo);
+		HashTableSC<Integer,ORArray<Edge<Double>>> pintar = Graph.ConnectedComponent(G);
 		System.out.println("cuantos componentes conectador hay en la re puta :v "+ pintar.getSize());
 		Iterator<Integer> it = pintar.keys();
 		for(int color = 1; it.hasNext();++color) {
@@ -298,8 +380,8 @@ public class Controller {
 				//todos dentro del for tienen que tener el mismo color :v
 				int one = edg.either();
 				int ot = edg.other(one);
-				Coordinates onee = grafo.getInfoVertex(grafo.translateInverse(one)).getCoordinates();
-				Coordinates twoo = grafo.getInfoVertex(grafo.translateInverse(ot)).getCoordinates();
+				Coordinates onee = G.getInfoVertex(G.translateInverse(one)).getCoordinates();
+				Coordinates twoo = G.getInfoVertex(G.translateInverse(ot)).getCoordinates();
 				//del mismo color esos perros :v
 			}
 		}

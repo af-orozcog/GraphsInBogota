@@ -22,7 +22,7 @@ public class VertexInfo implements IInfoVertex{
 	/**
 	 * la estacion de policia que puede tener asociado
 	 */
-	private int policeStation;
+	private Integer policeStation;
 	
 	
 	private Integer id;
@@ -54,8 +54,12 @@ public class VertexInfo implements IInfoVertex{
 		this.average = average;
 	}
 
-	public int getPoliceStation() {
+	public Integer getPoliceStation() {
 		return policeStation;
+	}
+	
+	public boolean hasPoliceStation() {
+		return policeStation != null;
 	}
 
 	public void setPoliceStation(int policeStation) {
