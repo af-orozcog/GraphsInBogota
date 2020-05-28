@@ -42,7 +42,7 @@ public class Controller {
 	HashTableLP<Integer,Comparendo> comparendos;
 
 	CargaGrafo cargaDatos;
-	LatLng pequeño;
+	LatLng pequeï¿½o;
 	LatLng grande;
 
 	/**
@@ -55,7 +55,7 @@ public class Controller {
 		grafo=cargaDatos.g;
 		nodosConEstaciones=cargaDatos.nodosConEstaciones;
 		comparendos=cargaDatos.comparendos;
-		pequeño=new LatLng(cargaDatos.latmin,cargaDatos.lonmin);
+		pequeï¿½o=new LatLng(cargaDatos.latmin,cargaDatos.lonmin);
 		grande=new LatLng(cargaDatos.latmax,cargaDatos.lonmax);
 	}	
 	public void run() 
@@ -121,41 +121,44 @@ public class Controller {
 
 
 	/**
-	 * 
-	 * @param idVertice1
-	 * @param idVertice2
+	 * Mï¿½todo que calcula la distancia minima entre dos puntos ingresados por el usuario
+	 * @param idVertice1 identificador del indice de partida
+	 * @param idVertice2 identificador del indice de llegada
 	 */
 	public void CaminoDistanciaMinima1A(int idVertice1, int idVertice2) {
 		ORArray<Integer> send = new ORArray<Integer>();
 		send.add(idVertice1);
 		Dijkstra caminos = new Dijkstra(this.grafo,send,false);
 		System.out.println("La distancia mï¿½s corta entre ambos puntos es: "+ caminos.distance(grafo.translateInverse(idVertice2)));
-		if(caminos.distance(grafo.translateInverse(idVertice2)) == Double.MAX_VALUE)return;
-		ORArray<Edge<Double>> paint = caminos.journey(grafo.translateInverse(idVertice2));
-		generarMapaAux(grafo,paint,pequeño,grande);
+		if(caminos.distance(idVertice2) == Double.MAX_VALUE)return;
+		ORArray<Edge<Double>> paint = caminos.journey(idVertice2);
+		System.out.println(paint.getSize()+"HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+		generarMapaAux(grafo,paint,pequeï¿½o,grande);
 	}
 
 	/**
-	 * 
-	 * @param idVertice1
-	 * @param idVertice2
+	 * Mï¿½todo que calcula la distancia minima entre dos puntos
+	 * En este caso la distancia minima es el numero de comparendos en 
+	 * nodos que pasa
+	 * @param idVertice1 identificador del indice de partida
+	 * @param idVertice2 identificador del indice de llegada
 	 */
 	public void CaminoDistanciaMinima1B(int idVertice1, int idVertice2) {
 		ORArray<Integer> send = new ORArray<Integer>();
 		send.add(idVertice1);
 		Dijkstra caminos = new Dijkstra(this.grafo,send,true);
-		System.out.println("La distancia mï¿½s corta entre ambos puntos es, segï¿½n numero de infracciones: "+ caminos.distance(grafo.translateInverse(idVertice2)));
-		if(caminos.distance(grafo.translateInverse(idVertice2)) == Double.MAX_VALUE)return;
-		ORArray<Edge<Double>> paint = caminos.journey(grafo.translateInverse(idVertice2));
-		generarMapaAux(grafo,paint,pequeño,grande);
+		System.out.println("La distancia mï¿½s corta entre ambos puntos es, segï¿½n numero de infracciones: "+ caminos.distance(idVertice2));
+		if(caminos.distance(idVertice2) == Double.MAX_VALUE)return;
+		ORArray<Edge<Double>> paint = caminos.journey(idVertice2);
+		generarMapaAux(grafo,paint,pequeï¿½o,grande);
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Grafo generado de sacar el MST en el grafo global
+	 * @return MST del grafo global
 	 */
 	public Graph<Integer,VertexInfo,Double> MST() {
-		KruskalMST arbol = new KruskalMST(grafo);
+		KruskalMST<Integer,VertexInfo> arbol = new KruskalMST<Integer,VertexInfo>(grafo);
 		ORArray<Edge<Double>> arcos = new ORArray<Edge<Double>>();
 		Iterable<Edge<Double>> recorrer = arbol.edges();
 		for(Edge<Double> va : recorrer) 
@@ -172,7 +175,9 @@ public class Controller {
 	}
 
 	/**
-	 * 
+	 * Method that takes the tree and prunes it to only show the edges and nodes related to the M 
+	 * places with the most infractions
+	 * @param m the amount of needed infractions
 	 */
 	public void ArbolMayorComparendos(int m) {
 		Graph<Integer,VertexInfo,Double> g = MST();
@@ -206,12 +211,13 @@ public class Controller {
 		for(Edge<Double> edg: aPintar) 
 			costo += edg.getInfo();
 		System.out.println("el costo del arbol es: "  + costo);
-		generarMapaAux(grafo,aPintar,pequeño,grande);
+		generarMapaAux(grafo,aPintar,pequeï¿½o,grande);
 	}
 
 
 	/**
 	 * 
+	 * @param m
 	 */
 	public void ArbolMayorGravedad(int m) {
 		Graph<Integer,VertexInfo,Double> g = MST();
@@ -282,7 +288,8 @@ public class Controller {
 	}
 
 	/**
-	 * 
+	 * Method that prints the connected components of infractions and police stations
+	 * This is done by allocating the infractions to the closest
 	 */
 	public void PoliceStationComponents() {
 		//Dijkstra caminos = new Dijkstra(this.grafo,nodosConEstaciones,false);
