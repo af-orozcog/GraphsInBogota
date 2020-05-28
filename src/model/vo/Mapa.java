@@ -72,7 +72,8 @@ public class Mapa extends MapView
 					//op.setStrokeOpacity(1.0);
 					op.setRadius(2);
 					ArrayList<Circle> circulos = new ArrayList<Circle>();
-					for(Edge<Double> edg: paint) {
+					for(int i  = 0; i < 2000;++i) {
+						Edge<Double> edg = paint.getElement(i);
 						int one = edg.either();
 						int two = edg.other(one);
 						Coordinates onee = mapa.getInfoVertex(mapa.translateInverse(one)).getCoor();
