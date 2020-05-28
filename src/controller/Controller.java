@@ -20,6 +20,7 @@ import model.data_structures.ORArray;
 import model.data_structures.PairComp;
 import model.vo.Coordinates;
 import model.vo.Mapa;
+import model.vo.Mapa2;
 import model.vo.PoliceStation;
 import model.vo.VertexInfo;
 
@@ -72,7 +73,7 @@ public class Controller {
 		System.out.println("Arco con mayor longitud: IDOrigen: "+cargaDatos.distMax[0]  +" IDDestino: "+cargaDatos.distMax[1]+ " Distancia: "+grafo.getInfoArc(cargaDatos.distMax[0], cargaDatos.distMax[1]));
 		System.out.println("***************************************************************");
 	}	
-	
+
 	public void run() 
 	{
 		Scanner lector = new Scanner(System.in);
@@ -114,24 +115,53 @@ public class Controller {
 
 				break;
 			case 4:
-				generarMapaGrafo(grafo,pequeno,grande, false, null);
+				generarMapa("Grafo completo",null,1,grafo);
 
 			}
 		}
 
 	}
 
-	public void generarMapaGrafo(Graph<Integer, VertexInfo, Double> grafo2,LatLng min,LatLng max,boolean pSinoVertices, Graph<Long, VertexInfo, Double> pGrafoAdicional)
+	public void generarMapa(String titulo,ORArray<Edge<Double>> paint, int colores, Graph<Integer,VertexInfo,Double> g )
 	{
-		Mapa x=new Mapa(grafo2,min,max,pSinoVertices, pGrafoAdicional);
-		Mapa.graficarMapa(x);
+		Mapa2 example = new Mapa2(titulo);
+
+		if(paint!=null)
+		{
+			for (int i=0;i<colores;i++)
+			{
+				for(Edge<Double> edg: paint) {
+					int one = edg.either();
+					int two = edg.other(one);
+					Coordinates onee = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
+					Coordinates twoo = grafo.getInfoVertex(grafo.translateInverse(two)).getCoor();						
+					double lat1 = onee.lat;
+					double lon1 = onee.lon;
+					double lat2 = twoo.lat;
+					double lon2 = twoo.lon;
+					example.generateSimplePath(new LatLng(lat1,lon1), new LatLng(lat2,lon2), false);			
+				}
+			}
+		}
+		else {
+			
+			Graph<Integer,VertexInfo,Double> ausar=grafo;
+			Iterator<Edge<Double>> arcos= ausar.edges().iterator();
+			while(arcos.hasNext())
+			{
+				Edge<Double> arc = arcos.next();
+				VertexInfo info1=(VertexInfo)ausar.getInfoVertex(ausar.translateInverse(arc.either()));
+				double lat1 = info1.getCoordinates().lat;
+				double lon1 = info1.getCoordinates().lon;
+				VertexInfo info2=(VertexInfo)ausar.getInfoVertex(ausar.translateInverse(arc.other(arc.either())));
+
+				double lat2 = info2.getCoordinates().lat;
+				double lon2 = info2.getCoordinates().lon;
+				example.generateSimplePath(new LatLng(lat1,lon1), new LatLng(lat2,lon2), false);			
+			}
+		}
 	}
 
-	public void generarMapaAux(Graph<Integer, VertexInfo, Double> grafo2,ORArray<Edge<Double>> paint, LatLng min,LatLng max)
-	{
-		Mapa x=new Mapa(grafo2,paint,min,max);
-		Mapa.graficarMapa(x);
-	}
 
 
 
@@ -150,7 +180,7 @@ public class Controller {
 		Double comp = Double.POSITIVE_INFINITY; 
 		if(val == comp)return;
 		ORArray<Edge<Double>> paint = caminos.journey(idVertice2);
-		generarMapaAux(grafo,paint,pequeno,grande);
+		generarMapa("Req 1A",paint,1,null);
 	}
 
 	/**
@@ -167,7 +197,7 @@ public class Controller {
 		System.out.println("La distancia mï¿½s corta entre ambos puntos es, segï¿½n numero de infracciones: "+ caminos.distance(idVertice2));
 		if(caminos.distance(idVertice2) == Double.POSITIVE_INFINITY)return;
 		ORArray<Edge<Double>> paint = caminos.journey(idVertice2);
-		generarMapaAux(grafo,paint,pequeno,grande);
+		generarMapa("Req 1B",paint,1,null);
 	}
 
 	/**
@@ -188,7 +218,8 @@ public class Controller {
 			g.addVertex(grafo.translateInverse(to), grafo.getInfoVertex(grafo.translateInverse(to)));
 			g.addEdge(grafo.translateInverse(from), grafo.translateInverse(to), ed.getInfo());
 		}
-		generarMapaGrafo(g, pequeno, grande, false, null);
+		generarMapa("MST",null,1,g);
+
 		return g;
 	}
 
@@ -229,7 +260,8 @@ public class Controller {
 		for(Edge<Double> edg: aPintar) 
 			costo += edg.getInfo();
 		System.out.println("el costo del arbol es: "  + costo);
-		generarMapaAux(grafo,aPintar,pequeno,grande);
+		generarMapa("Arbol mayor comparendos",aPintar,1,null);
+
 	}
 
 
@@ -259,7 +291,7 @@ public class Controller {
 		for(Edge<Double> edg: aPintar) 
 			costo += edg.getInfo();
 		System.out.println("el costo del arbol es: "  + costo);
-		generarMapaAux(grafo,aPintar,pequeno,grande);
+		generarMapa("Arbol mayor Gravedad",aPintar,1,null);
 
 	}
 
@@ -292,7 +324,7 @@ public class Controller {
 			}
 		}
 		System.out.println("El costo de este camino que conecta el grafo es: "+ costo);
-		generarMapaAux(grafo,aPintar,pequeno,grande);
+		generarMapa("Caminos cortos policía",aPintar,1,null);
 
 	}
 
