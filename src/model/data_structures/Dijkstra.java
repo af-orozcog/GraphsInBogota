@@ -42,7 +42,7 @@ public class Dijkstra {
 			distTo[G.translate(va)] = 0.0;
 			dad[G.translate(va)] = -1;
 			pq.insert(new PairComp<Double,Integer>(0.0,G.translate(va)));
-			System.out.println(G.translate(va));
+			//System.out.println(G.translate(va));
 		}
 		while(pq.size() != 0) {
 			PairComp<Double,Integer> front = pq.delMin();

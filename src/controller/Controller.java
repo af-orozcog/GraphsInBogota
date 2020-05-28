@@ -210,7 +210,7 @@ public class Controller {
 				System.out.println("Por favor digite el nodo al que quiere llegar: ");
 				int to3 = lector.nextInt();
 				long start3 = System.currentTimeMillis();
-				CaminoDistanciaMinima1A(from3,to3);
+				CaminoDistanciaMinima1B(from3, to3);
 				long end3 = System.currentTimeMillis();
 				System.out.println("el tiempo que toma al algoritmo encontrar la respuesta y dibujar el camino"
 						+ "es: " + (end3-start3));
@@ -286,7 +286,7 @@ public class Controller {
 			//Primer nodo
 			int one = primer.either();
 			//Ultimo nodo
-			int two = ultimo.other(one);
+			int two = ultimo.either();
 			
 			Coordinates onee = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
 			Coordinates twoo = grafo.getInfoVertex(grafo.translateInverse(two)).getCoor();						
@@ -439,7 +439,7 @@ public class Controller {
 			g.addEdge(grafo.translateInverse(from), grafo.translateInverse(to), ed.getInfo());
 		}
 
-		generarMapa("MST",null,g,null);
+		//generarMapa("MST",null,g,null);
 		System.out.println("Terminando de generar el grafo de los Arcos del MST");
 		return g;
 	}
@@ -452,6 +452,7 @@ public class Controller {
 	 */
 	public void ArbolMayorComparendos(int m) {
 		Graph<Integer,VertexInfo,Double> g = MST();
+		System.out.println("tamanio del arbol antes de ser limpiado, vertices " + g.V() + " edges "+ g.E());
 		ORArray<PairComp<Integer, VertexInfo>> vertex = new ORArray<PairComp<Integer, VertexInfo>>();
 		Iterator<Integer> it = g.vertices();
 		while(it.hasNext()) {
@@ -500,6 +501,7 @@ public class Controller {
 	 */
 	public void ArbolMayorGravedad(int m) {
 		Graph<Integer,VertexInfo,Double> g = MST();
+		System.out.println("tamanio del arbol antes de ser limpiado, vertices " + g.V() + " edges "+ g.E());
 		Comparator<PairComp<Gravedad,Integer>> comp = new Comparator<PairComp<Gravedad,Integer>>() {
 			@Override
 			public int compare(PairComp<Gravedad, Integer> o1, PairComp<Gravedad, Integer> o2) {
