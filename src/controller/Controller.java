@@ -273,7 +273,9 @@ public class Controller {
 
 	public void generarMapa(String titulo,ORArray<Edge<Double>> paint,Graph<Integer,VertexInfo,Double> g,HashTableSC<Integer,ORArray<Edge<Double>>> pintar )
 	{
+		System.out.println("cual es el sapo hp problema");
 		Mapa2 example = new Mapa2(titulo);
+		
 
 		if(paint!=null)
 		{
@@ -327,6 +329,7 @@ public class Controller {
 		}
 		else if(pintar!=null)
 		{
+			System.out.println("pero que doble hps!!!");
 			Graph<Integer,VertexInfo,Double> ausar=g;
 			Iterator<Integer> it = pintar.keys();
 			String[]colores= {"#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231", 
@@ -628,12 +631,13 @@ public class Controller {
 			grafoPintar.addVertex(G.translateInverse(edg.other(edg.either())),G.getInfoVertex(G.translateInverse(edg.other(edg.either()))));
 			grafoPintar.addEdge(G.translateInverse(edg.either()), G.translateInverse(edg.other(edg.either())), G.getInfoArc(G.translateInverse(edg.either()), G.translateInverse(edg.other(edg.either()))));
 		}
+		G = null;
+		caminos = null;
 		System.out.println("Terminando de generar el grafo a pintar");
 		System.out.println("Empezando a generar los componentes conectados");
 		HashTableSC<Integer,ORArray<Edge<Double>>> pintar = Graph.ConnectedComponent(grafoPintar);
 		System.out.println("Terminando de generar los componentes conectados");
-
-		generarMapa("Componentes estación de policía",null,G,pintar);
+		generarMapa("Componentes estación de policía",null,grafoPintar,pintar);
 
 	}
 
