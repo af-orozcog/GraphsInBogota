@@ -130,7 +130,9 @@ public class Controller {
 		send.add(idVertice1);
 		Dijkstra caminos = new Dijkstra(this.grafo,send,false);
 		System.out.println("La distancia mas corta entre ambos puntos es: "+ caminos.distance(idVertice2));
-		if(caminos.distance(idVertice2) == Double.MAX_VALUE)return;
+		double val = caminos.distance(idVertice2); 
+		Double comp = Double.POSITIVE_INFINITY; 
+		if(val == comp)return;
 		ORArray<Edge<Double>> paint = caminos.journey(idVertice2);
 		generarMapaAux(grafo,paint,pequeno,grande);
 	}
@@ -147,7 +149,7 @@ public class Controller {
 		send.add(idVertice1);
 		Dijkstra caminos = new Dijkstra(this.grafo,send,true);
 		System.out.println("La distancia m�s corta entre ambos puntos es, seg�n numero de infracciones: "+ caminos.distance(idVertice2));
-		if(caminos.distance(idVertice2) == Double.MAX_VALUE)return;
+		if(caminos.distance(idVertice2) == Double.POSITIVE_INFINITY)return;
 		ORArray<Edge<Double>> paint = caminos.journey(idVertice2);
 		generarMapaAux(grafo,paint,pequeno,grande);
 	}
@@ -283,8 +285,8 @@ public class Controller {
 	 * This is done by allocating the infractions to the closest
 	 */
 	public void PoliceStationComponents() {
-		//Dijkstra caminos = new Dijkstra(this.grafo,nodosConEstaciones,false);
-		//Graph<Integer,VertexInfo,Double> G = caminos.generateGraph();
+		Dijkstra caminos = new Dijkstra(this.grafo,nodosConEstaciones,false);
+		Graph<Integer,VertexInfo,Double> G = caminos.generateGraph();
 		HashTableSC<Integer,ORArray<Edge<Double>>> pintar = Graph.ConnectedComponent(grafo);
 		System.out.println("cuantos componentes conectador hay en la re puta :v "+ pintar.getSize());
 		Iterator<Integer> it = pintar.keys();
@@ -299,7 +301,6 @@ public class Controller {
 				//del mismo color esos perros :v
 			}
 		}
-		//la llave es el color y los arcos
 	}
 
 }
