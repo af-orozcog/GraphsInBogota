@@ -137,6 +137,8 @@ public class Controller {
 			}
 			if(info.hasPoliceStation()) nodosConEstaciones.add(val);
 		}
+		
+		
 	}	
 
 	public void run() 
@@ -266,15 +268,35 @@ public class Controller {
 
 		if(paint!=null)
 		{
+			//Inicial
+			Edge<Double> primer=paint.getElement(0);
+			//Final
+			Edge<Double> ultimo=paint.getElement(paint.getSize()-1);
+			
+			//Primer nodo
+			int one = primer.either();
+			//Ultimo nodo
+			int two = ultimo.other(one);
+			
+			Coordinates onee = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
+			Coordinates twoo = grafo.getInfoVertex(grafo.translateInverse(two)).getCoor();						
+			double lat1 = onee.lat;
+			double lon1 = onee.lon;
+			double lat2 = twoo.lat;
+			double lon2 = twoo.lon;
+			
+			example.generateMarker(new LatLng(lat1,lon1));
+			example.generateMarker(new LatLng(lat2,lon2));
+
 			for(Edge<Double> edg: paint) {
-				int one = edg.either();
-				int two = edg.other(one);
-				Coordinates onee = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
-				Coordinates twoo = grafo.getInfoVertex(grafo.translateInverse(two)).getCoor();						
-				double lat1 = onee.lat;
-				double lon1 = onee.lon;
-				double lat2 = twoo.lat;
-				double lon2 = twoo.lon;
+				one = edg.either();
+				two = edg.other(one);
+				onee = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
+				twoo = grafo.getInfoVertex(grafo.translateInverse(two)).getCoor();						
+				lat1 = onee.lat;
+				lon1 = onee.lon;
+				lat2 = twoo.lat;
+				lon2 = twoo.lon;
 				example.generateSimplePath(new LatLng(lat1,lon1), new LatLng(lat2,lon2), false);			
 			}
 		}
@@ -301,9 +323,7 @@ public class Controller {
 					"#911eb4", "#46f0f0", "#f032e6", "#bcf60c", "#fabebe", "#008080",
 					"#e6beff", "#9a6324", "#fffac8", "#800000", "#aaffc3", "#808000", 
 					"#ffd8b1", "#000075", "#808080", "#ffffff", "#000000"};
-			
 			for(int color = 1; it.hasNext();++color) {
-				
 				CircleOptions settingsCircle=new CircleOptions();
 				settingsCircle.setFillColor(colores[color-1]);
 				settingsCircle.setRadius(2000000);
@@ -316,7 +336,7 @@ public class Controller {
 				settingsLine.setStrokeWeight(2.0);
 				example.setSettingsCircle(settingsCircle);
 				example.setSettingsLine(settingsLine);
-				
+
 				ORArray<Edge<Double>> thro =  pintar.get(it.next());
 				for(Edge<Double> edg:  thro) {
 					//todos dentro del for tienen que tener el mismo color :v
@@ -554,8 +574,8 @@ public class Controller {
 
 
 		HashTableSC<Integer,ORArray<Edge<Double>>> pintar = Graph.ConnectedComponent(G);
-		
-		
+
+
 		generarMapa("Componentes estación de policía",null,G,pintar);
 
 	}
