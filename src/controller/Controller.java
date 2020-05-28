@@ -69,6 +69,7 @@ public class Controller {
 		System.out.println("Vértice con mayor ID: "+verticeGrande.getId()+" Latitud: "+verticeGrande.getCoordinates().lat+" Longitud: "+verticeGrande.getCoordinates().lon );
 		System.out.println("Arcos en el grafo: "+ grafo.E());
 		System.out.println("Arco con mayor ID: IDOrigen: "+cargaDatos.arcMax[0]  +" IDDestino: "+cargaDatos.arcMax[1]+ " Distancia: "+grafo.getInfoArc(cargaDatos.arcMax[0], cargaDatos.arcMax[1]));
+		System.out.println("Arco con mayor longitud: IDOrigen: "+cargaDatos.distMax[0]  +" IDDestino: "+cargaDatos.distMax[1]+ " Distancia: "+grafo.getInfoArc(cargaDatos.distMax[0], cargaDatos.distMax[1]));
 		System.out.println("***************************************************************");
 	}	
 	

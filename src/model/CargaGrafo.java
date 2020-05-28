@@ -34,6 +34,8 @@ public class CargaGrafo {
 	public static PoliceStation bigEst=null;
 	public static Integer vertMax=0;
 	public static Integer[] arcMax= {0,0};
+	public static Integer[] distMax= {0,0};
+	public static double lejano=0.0;
 
 	public CargaGrafo()
 	{
@@ -264,6 +266,12 @@ public class CargaGrafo {
 						{
 							arcMax[0]=id;
 							arcMax[1]=ady;
+						}
+						if(haversine(coor, segundo.getCoordinates())>lejano)
+						{
+							lejano=haversine(coor, segundo.getCoordinates());
+							distMax[0]=id;
+							distMax[1]=ady;
 						}
 
 					}
