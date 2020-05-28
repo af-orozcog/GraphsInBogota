@@ -38,6 +38,8 @@ public class Mapa2 extends MapView{
 	{
 		this.settingsLine=settingsLine;
 	}
+	
+	
 	/**
 	 * Generate a marker on the LatLongPoint
 	 * @param pos of the wanted marker
