@@ -278,7 +278,7 @@ public class Controller {
 				example.generateSimplePath(new LatLng(lat1,lon1), new LatLng(lat2,lon2), false);			
 			}
 		}
-		else if(g!=null) {
+		else if(g!=null && pintar==null) {
 
 			Graph<Integer,VertexInfo,Double> ausar=grafo;
 			Iterator<Edge<Double>> arcos= ausar.edges().iterator();
