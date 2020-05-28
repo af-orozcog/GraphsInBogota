@@ -148,9 +148,9 @@ public class Controller {
 		while( !fin ){
 			System.out.println("Cual de las siguientes opciones quiere hacer?\n"
 					+ "1.Obtener el camino de costo mínimo entre dos ubicaciones geográficas por distancia\n"
-					+ "2.Determinar la red de comunicaciones que soporte la instalación de cámaras de video en los M puntos donde se presentan los comparendos de mayor gravedad.\n"
+					+ "2.Determinar la red de comunicaciones que soporte la instalación de cámaras de video en los M puntos donde se presenta el mayor número de comparendos en la ciudad.\n"
 					+ "3.Obtener el camino de costo mínimo entre dos ubicaciones geográficas por número de comparendos\n"
-					+ "4.Determinar la red de comunicaciones que soporte la instalación de cámaras de video en los M puntos donde se presenta el mayor número de comparendos en la ciudad.\n"+
+					+ "4.Determinar la red de comunicaciones que soporte la instalación de cámaras de video en los M puntos donde se presentan los comparendos de mayor gravedad.\n"+
 					"5.Obtener los caminos más cortos para que los policías puedan atender los M comparendos más graves.\n"
 					+ "6.Identificar las zonas de impacto de las estaciones de policia\n");
 
@@ -178,7 +178,7 @@ public class Controller {
 				System.out.println("-----------------------------------------------------------------------");
 				System.out.println("-----------------------------------------------------------------------");
 				System.out.println("Por favor digite el numero de nodos con mayor cantidad de comparendos que se quieren"
-						+ "utilizar: ");
+						+ " utilizar: ");
 				int m2 = lector.nextInt();
 				long start2 = System.currentTimeMillis();
 				ArbolMayorComparendos(m2);
@@ -211,7 +211,7 @@ public class Controller {
 				System.out.println("-----------------------------------------------------------------------");
 				System.out.println("-----------------------------------------------------------------------");
 				System.out.println("Por favor digite el numero de comparendos de mayor gravedad que se quiere"
-						+ "utilizar: ");
+						+ " utilizar: ");
 				int m4 = lector.nextInt();
 				long start4 = System.currentTimeMillis();
 				ArbolMayorGravedad(m4);
@@ -228,7 +228,7 @@ public class Controller {
 				System.out.println("-----------------------------------------------------------------------");
 				System.out.println("-----------------------------------------------------------------------");
 				System.out.println("Por favor digite el numero de comparendos de mayor gravedad que se quiere"
-						+ "utilizar: ");
+						+ " utilizar: ");
 				int m5 = lector.nextInt();
 				long start5 = System.currentTimeMillis();
 				shortestPathsPolice(m5);
