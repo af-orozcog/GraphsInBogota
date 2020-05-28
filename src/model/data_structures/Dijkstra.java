@@ -56,7 +56,7 @@ public class Dijkstra {
 					val = G.getInfoVertex(G.translateInverse(ot)).getInfo2();
 				else
 					val = va.getInfo();
-				System.out.println("cual es la sapa distancia :v "+ val + " wuttt " + graph.translateInverse(ot) + " wtf is ot" + ot);
+				//System.out.println("cual es la sapa distancia :v "+ val + " wuttt " + graph.translateInverse(ot) + " wtf is ot" + ot);
 				if(distTo[ot] > val + distTo[front.getSecond()]) {
 					distTo[ot] = val + distTo[front.getSecond()];
 					dad[ot] = front.getSecond();
