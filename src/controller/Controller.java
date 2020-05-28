@@ -6,7 +6,9 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Scanner;
 
+import com.teamdev.jxmaps.CircleOptions;
 import com.teamdev.jxmaps.LatLng;
+import com.teamdev.jxmaps.PolylineOptions;
 
 import model.CargaGrafo;
 import model.Comparendo;
@@ -33,7 +35,7 @@ public class Controller {
 	 *
 	 */
 	class Gravedad implements Comparable<Gravedad>{
-		
+
 		/**
 		 * string que representa el tipo de servicio
 		 */
@@ -43,7 +45,7 @@ public class Controller {
 		 * string que representa la infraccion
 		 */
 		private String infraccion;
-		
+
 		/**
 		 * Constructor de gravedad
 		 * @param tipoServicio
@@ -53,7 +55,7 @@ public class Controller {
 			this.TipoServicio = tipoServicio;
 			this.infraccion = infraccion;
 		}
-		
+
 		@Override
 		/**
 		 * Comaprador para infraccion
@@ -66,7 +68,7 @@ public class Controller {
 			if(TipoServicio.compareTo("Oficial") == 0) return 1;
 			return 0;
 		}
-		
+
 	}
 
 	/**
@@ -78,33 +80,33 @@ public class Controller {
 	 * infracciones con la gravedad
 	 */
 	private ORArray<PairComp<Gravedad, Integer>> infraccionesNodoGravedad;
-	
+
 
 	/**
 	 * id de todas los nodos que tienen estaciones
 	 */
 	private ORArray<Integer> nodosConEstaciones; 
-	
+
 	/**
 	 * hashtable con la informacion de los comparendos
 	 */
 	private HashTableLP<Integer,Comparendo> comparendos;
-	
+
 	/**
 	 * hashtable con la informacion de las estaciones
 	 */
 	private HashTableLP<Integer,PoliceStation> estaciones;
-	
+
 	/**
 	 * clase de carga de datos
 	 */
 	private CargaGrafo cargaDatos;
-	
+
 	/**
 	 * la latitud mas pequeña del grafo
 	 */
 	private LatLng pequeno;
-	
+
 	/**
 	 * la  latitud mas pqueña del grafo
 	 */
@@ -220,7 +222,7 @@ public class Controller {
 				System.out.println("-----------------------------------------------------------------------");
 				System.out.println("-----------------------------------------------------------------------");
 				break;
-			
+
 			case 5:
 				System.out.println("-----------------------------------------------------------------------");
 				System.out.println("-----------------------------------------------------------------------");
@@ -258,29 +260,26 @@ public class Controller {
 
 	}
 
-	public void generarMapa(String titulo,ORArray<Edge<Double>> paint, int colores, Graph<Integer,VertexInfo,Double> g )
+	public void generarMapa(String titulo,ORArray<Edge<Double>> paint,Graph<Integer,VertexInfo,Double> g,HashTableSC<Integer,ORArray<Edge<Double>>> pintar )
 	{
 		Mapa2 example = new Mapa2(titulo);
 
 		if(paint!=null)
 		{
-			for (int i=0;i<colores;i++)
-			{
-				for(Edge<Double> edg: paint) {
-					int one = edg.either();
-					int two = edg.other(one);
-					Coordinates onee = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
-					Coordinates twoo = grafo.getInfoVertex(grafo.translateInverse(two)).getCoor();						
-					double lat1 = onee.lat;
-					double lon1 = onee.lon;
-					double lat2 = twoo.lat;
-					double lon2 = twoo.lon;
-					example.generateSimplePath(new LatLng(lat1,lon1), new LatLng(lat2,lon2), false);			
-				}
+			for(Edge<Double> edg: paint) {
+				int one = edg.either();
+				int two = edg.other(one);
+				Coordinates onee = grafo.getInfoVertex(grafo.translateInverse(one)).getCoor();
+				Coordinates twoo = grafo.getInfoVertex(grafo.translateInverse(two)).getCoor();						
+				double lat1 = onee.lat;
+				double lon1 = onee.lon;
+				double lat2 = twoo.lat;
+				double lon2 = twoo.lon;
+				example.generateSimplePath(new LatLng(lat1,lon1), new LatLng(lat2,lon2), false);			
 			}
 		}
-		else {
-			
+		else if(g!=null) {
+
 			Graph<Integer,VertexInfo,Double> ausar=grafo;
 			Iterator<Edge<Double>> arcos= ausar.edges().iterator();
 			while(arcos.hasNext())
@@ -290,10 +289,48 @@ public class Controller {
 				double lat1 = info1.getCoordinates().lat;
 				double lon1 = info1.getCoordinates().lon;
 				VertexInfo info2=(VertexInfo)ausar.getInfoVertex(ausar.translateInverse(arc.other(arc.either())));
-
 				double lat2 = info2.getCoordinates().lat;
 				double lon2 = info2.getCoordinates().lon;
 				example.generateSimplePath(new LatLng(lat1,lon1), new LatLng(lat2,lon2), false);			
+			}
+		}
+		else if(pintar!=null)
+		{
+			Iterator<Integer> it = pintar.keys();
+			String[]colores= {"#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231", 
+					"#911eb4", "#46f0f0", "#f032e6", "#bcf60c", "#fabebe", "#008080",
+					"#e6beff", "#9a6324", "#fffac8", "#800000", "#aaffc3", "#808000", 
+					"#ffd8b1", "#000075", "#808080", "#ffffff", "#000000"};
+			
+			for(int color = 1; it.hasNext();++color) {
+				
+				CircleOptions settingsCircle=new CircleOptions();
+				settingsCircle.setFillColor(colores[color-1]);
+				settingsCircle.setRadius(2000000);
+				settingsCircle.setFillOpacity(0.35);
+
+				PolylineOptions settingsLine=new PolylineOptions();
+				settingsLine.setGeodesic(true);
+				settingsLine.setStrokeColor(colores[color-1]);
+				settingsLine.setStrokeOpacity(1.0);
+				settingsLine.setStrokeWeight(2.0);
+				example.setSettingsCircle(settingsCircle);
+				example.setSettingsLine(settingsLine);
+				
+				ORArray<Edge<Double>> thro =  pintar.get(it.next());
+				for(Edge<Double> edg:  thro) {
+					//todos dentro del for tienen que tener el mismo color :v
+					int one = edg.either();
+					int ot = edg.other(one);
+					Coordinates onee = g.getInfoVertex(g.translateInverse(one)).getCoordinates();
+					Coordinates twoo = g.getInfoVertex(g.translateInverse(ot)).getCoordinates();
+					double lat1 = onee.lat;
+					double lon1 = onee.lon;
+					double lat2 = twoo.lat;
+					double lon2 = twoo.lon;
+					example.generateSimplePath(new LatLng(lat1,lon1), new LatLng(lat2,lon2), false);	
+					//del mismo color esos perros :v
+				}
 			}
 		}
 	}
@@ -321,7 +358,7 @@ public class Controller {
 		ORArray<Edge<Double>> paint = caminos.journey(idVertice2);
 		System.out.println("terminando de calcular el camino optimo");
 		System.out.println("tamanio de arcos "+ paint.getSize());
-		generarMapa("Req 1A",paint,1,null);
+		generarMapa("Req 1A",paint,null,null);
 
 
 	}
@@ -343,7 +380,7 @@ public class Controller {
 		if(caminos.distance(idVertice2) == Double.POSITIVE_INFINITY)return;
 		System.out.println("calculando el camino optimo");
 		ORArray<Edge<Double>> paint = caminos.journey(idVertice2);
-		generarMapa("Req 1B",paint,1,null);
+		generarMapa("Req 1B",paint,null,null);
 
 		System.out.println("terminando de calcular el camino optimo");
 		System.out.println("tamanio de arcos "+ paint.getSize());
@@ -372,12 +409,12 @@ public class Controller {
 			g.addEdge(grafo.translateInverse(from), grafo.translateInverse(to), ed.getInfo());
 		}
 
-		generarMapa("MST",null,1,g);
+		generarMapa("MST",null,g,null);
 		System.out.println("Terminando de generar el grafo de los Arcos del MST");
 		return g;
 	}
 
-	
+
 	/**
 	 * Method that takes the tree and prunes it to only show the edges and nodes related to the M 
 	 * places with the most infractions
@@ -420,7 +457,7 @@ public class Controller {
 			costo += edg.getInfo();
 		System.out.println("el costo del arbol es: "  + costo);
 
-		generarMapa("Arbol mayor comparendos",aPintar,1,null);
+		generarMapa("Arbol mayor comparendos",aPintar,null,null);
 
 		System.out.println("el tamanio del grafo en nodos " + aPintar.getSize());
 
@@ -458,7 +495,7 @@ public class Controller {
 			costo += edg.getInfo();
 		System.out.println("el costo del arbol es: "  + costo);
 
-		generarMapa("Arbol mayor Gravedad",aPintar,1,null);
+		generarMapa("Arbol mayor Gravedad",aPintar,null,null);
 
 		System.out.println("el tamanio del grafo en nodos " + aPintar.getSize());
 
@@ -499,7 +536,7 @@ public class Controller {
 		}
 		System.out.println("terminando de crear el arreglo de distancia minimas");
 		System.out.println("El costo de este camino que conecta el grafo es: "+ costo);
-		generarMapa("Caminos cortos policía",aPintar,1,null);
+		generarMapa("Caminos cortos policía",aPintar,null,null);
 
 	}
 
@@ -514,20 +551,13 @@ public class Controller {
 		System.out.println("empezando a generar grafo de distancia minimas");
 		Graph<Integer,VertexInfo,Double> G = caminos.generateGraph();
 		System.out.println("terminando de generar grafo de distancia minimas");
+
+
 		HashTableSC<Integer,ORArray<Edge<Double>>> pintar = Graph.ConnectedComponent(G);
-		System.out.println("empezando a pintar");
-		Iterator<Integer> it = pintar.keys();
-		for(int color = 1; it.hasNext();++color) {
-			ORArray<Edge<Double>> thro =  pintar.get(it.next());
-			for(Edge<Double> edg:  thro) {
-				//todos dentro del for tienen que tener el mismo color :v
-				int one = edg.either();
-				int ot = edg.other(one);
-				Coordinates onee = G.getInfoVertex(G.translateInverse(one)).getCoordinates();
-				Coordinates twoo = G.getInfoVertex(G.translateInverse(ot)).getCoordinates();
-				//del mismo color esos perros :v
-			}
-		}
+		
+		
+		generarMapa("Componentes estación de policía",null,G,pintar);
+
 	}
 
 }

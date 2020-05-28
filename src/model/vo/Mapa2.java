@@ -34,6 +34,10 @@ public class Mapa2 extends MapView{
 		this.settingsCircle = settingsCircle;
 	}
 
+	public void setSettingsLine(PolylineOptions settingsLine)
+	{
+		this.settingsLine=settingsLine;
+	}
 	/**
 	 * Generate a marker on the LatLongPoint
 	 * @param pos of the wanted marker
