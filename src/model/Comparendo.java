@@ -64,9 +64,9 @@ public class Comparendo {
 	}
 	@Override
 	public String toString() {
-		return "Comparendo [OBJECTID=" + OBJECTID + ", FECHA_HORA=" + FECHA_HORA + ", DES_INFRACCION=" + DES_INFRACCION
+		return "OBJECTID=" + OBJECTID + ", FECHA_HORA=" + FECHA_HORA + ", DES_INFRACCION=" + DES_INFRACCION
 				+ ", MEDIO_DETECCION=" + MEDIO_DETECCION + ", CLASE_VEHICULO=" + CLASE_VEHICULO + ", TIPO_SERVICIO="
-				+ TIPO_SERVICIO + ", INFRACCION=" + INFRACCION + ", LOCALIDAD=" + LOCALIDAD + "]";
+				+ TIPO_SERVICIO + ", INFRACCION=" + INFRACCION + ", LOCALIDAD=" + LOCALIDAD;
 	}
-
+	
 }

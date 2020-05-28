@@ -1,10 +1,10 @@
 package model.vo;
 
 public class PoliceStation {
-	
+
 	@Override
 	public String toString() {
-		return "PoliceStation [coor=" + coor + ", OBJECTID=" + OBJECTID + ", id=" + id + ", EPOCOD_PLAN=" + EPOCOD_PLAN
+		return "OBJECTID=" + OBJECTID + ", EPOCOD_PLAN=" + EPOCOD_PLAN
 				+ ", EPOCOD_ENT=" + EPOCOD_ENT + ", EPOCOD_PROY=" + EPOCOD_PROY + ", EPOANIO_GEO=" + EPOANIO_GEO
 				+ ", EPOFECHA_INI=" + EPOFECHA_INI + ", EPOFECHA_FIN=" + EPOFECHA_FIN + ", EPODESCRIP=" + EPODESCRIP
 				+ ", EPOEST_PROY=" + EPOEST_PROY + ", EPOINTERV_ESP=" + EPOINTERV_ESP + ", EPODIR_SITIO=" + EPODIR_SITIO
@@ -13,10 +13,8 @@ public class PoliceStation {
 				+ ", EPOCELECTR=" + EPOCELECTR + ", EPOPWEB=" + EPOPWEB + ", EPOIUUPLAN=" + EPOIUUPLAN + ", EPOIUSCATA="
 				+ EPOIUSCATA + ", EPOIULOCAL=" + EPOIULOCAL + ", EPOEASOCIA=" + EPOEASOCIA + ", EPOFUNCION="
 				+ EPOFUNCION + ", EPOTEQUIPA=" + EPOTEQUIPA + ", EPONOMBRE=" + EPONOMBRE + ", EPOIDENTIF=" + EPOIDENTIF
-				+ ", EPOFECHA_C=" + EPOFECHA_C + "]";
+				+ ", EPOFECHA_C=" + EPOFECHA_C;
 	}
-
-	private  Coordinates coor;
 
 	private int OBJECTID;
 
@@ -28,62 +26,60 @@ public class PoliceStation {
 		OBJECTID = oBJECTID;
 	}
 
-	private Long id;
-	
 	private int EPOCOD_PLAN;
-	
+
 	private String EPOCOD_ENT;
-	
+
 	private String EPOCOD_PROY;
-	
+
 	private long EPOANIO_GEO;
-	
+
 	private long EPOFECHA_INI;
-	
+
 	private long EPOFECHA_FIN;
-	
+
 	private String EPODESCRIP;
-	
+
 	private String EPOEST_PROY;
-	
+
 	private String EPOINTERV_ESP;
-	
+
 	private String EPODIR_SITIO;
-	
+
 	private String EPOCOD_SITIO;
-	
+
 	private Double EPOLATITUD;
-	
+
 	private Double EPOLONGITU;
-	
+
 	private String EPOSERVICIO;
-	
+
 	private String EPOHORARIO;
-	
+
 	private String EPOTELEFON;
-	
+
 	private String EPOCELECTR;
 
 	private String EPOPWEB;
-	
+
 	private String EPOIUUPLAN;
-	
+
 	private String EPOIUSCATA;
-	
+
 	private String EPOIULOCAL;
-	
+
 	private String EPOEASOCIA;
-	
+
 	private String EPOFUNCION;
-	
+
 	private String EPOTEQUIPA;
-	
+
 	private String EPONOMBRE;
-	
+
 	private String EPOIDENTIF;
-	
+
 	private String EPOFECHA_C;
-	
+
 	/**
 	 * @param coor
 	 * @param id
@@ -115,15 +111,13 @@ public class PoliceStation {
 	 * @param ePOIDENTIF
 	 * @param ePOFECHA_C
 	 */
-	public PoliceStation(Coordinates coor, Long id, int ePOCOD_PLAN, String ePOCOD_ENT, String ePOCOD_PROY,
+	public PoliceStation(int ePOCOD_PLAN, String ePOCOD_ENT, String ePOCOD_PROY,
 			long ePOANIO_GEO, long ePOFECHA_INI, long ePOFECHA_FIN, String ePODESCRIP, String ePOEST_PROY,
 			String ePOINTERV_ESP, String ePODIR_SITIO, String ePOCOD_SITIO, Double ePOLATITUD, Double ePOLONGITU,
 			String ePOSERVICIO, String ePOHORARIO, String ePOTELEFON, String ePOCELECTR, String ePOPWEB,
 			String ePOIUUPLAN, String ePOIUSCATA, String ePOIULOCAL, String ePOEASOCIA, String ePOFUNCION,
 			String ePOTEQUIPA, String ePONOMBRE, String ePOIDENTIF, String ePOFECHA_C) {
 		super();
-		this.coor = coor;
-		this.id = id;
 		EPOCOD_PLAN = ePOCOD_PLAN;
 		EPOCOD_ENT = ePOCOD_ENT;
 		EPOCOD_PROY = ePOCOD_PROY;
@@ -151,34 +145,6 @@ public class PoliceStation {
 		EPONOMBRE = ePONOMBRE;
 		EPOIDENTIF = ePOIDENTIF;
 		EPOFECHA_C = ePOFECHA_C;
-	}
-
-	/**
-	 * @return the coor
-	 */
-	public Coordinates getCoor() {
-		return coor;
-	}
-
-	/**
-	 * @param coor the coor to set
-	 */
-	public void setCoor(Coordinates coor) {
-		this.coor = coor;
-	}
-
-	/**
-	 * @return the id
-	 */
-	public Long getId() {
-		return id;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	/**
@@ -559,5 +525,5 @@ public class PoliceStation {
 		EPOFECHA_C = ePOFECHA_C;
 	}
 
-	
+
 }

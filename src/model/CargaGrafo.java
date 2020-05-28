@@ -30,6 +30,11 @@ public class CargaGrafo {
 	public static double latmax;
 	public static double lonmin;
 	public static double lonmax;
+	public static Comparendo mayor=null;
+	public static PoliceStation bigEst=null;
+	public static Integer vertMax=0;
+	public static Integer[] arcMax= {0,0};
+
 	public CargaGrafo()
 	{
 		//		cargarGrafo();
@@ -226,6 +231,11 @@ public class CargaGrafo {
 
 				VertexInfo cont = new VertexInfo(coor,Integer.parseInt(vertice.get("id").toString()));
 
+				if(Integer.parseInt(vertice.get("id").toString())>vertMax)
+				{
+					vertMax=Integer.parseInt(vertice.get("id").toString());
+				}
+
 				JSONArray inf = (JSONArray) vertice.get("infractions");
 
 
@@ -249,6 +259,13 @@ public class CargaGrafo {
 					if(g.getInfoVertex(ady) != null) {
 						VertexInfo segundo=(VertexInfo) g.getInfoVertex(ady);
 						g.addEdge(id, ady, haversine(coor, segundo.getCoordinates()));
+
+						if(id>arcMax[0] || (id==arcMax[0] && arcMax[1]<ady))
+						{
+							arcMax[0]=id;
+							arcMax[1]=ady;
+						}
+
 					}
 				}
 			}
@@ -271,14 +288,23 @@ public class CargaGrafo {
 
 			//convert the json string back to object
 			Listado obj = gson.fromJson(br, Listado.class);
+			mayor=null;
 			for (Features feature : obj.getInfo().getFeatures()) {
 				Comparendo comparendo=feature.getComparendo();
 				Double latitud=feature.getGeometry().getCoordinates()[0];
 				Double longitud=feature.getGeometry().getCoordinates()[1];
-				Coordinates coordenada=new Coordinates(latitud,longitud); 
+				//				Coordinates coordenada=new Coordinates(latitud,longitud); 
 				if(comparendo.getCLASE_VEHICULO().equals("AUTOMÓVIL"))
 					comparendo.setCLASE_VEHICULO("AUTOMOVIL");
 				comparendos.put(comparendo.OBJECTID, comparendo);
+				if(mayor==null)
+				{
+					mayor=comparendo;
+				}
+				else if(comparendo.OBJECTID>mayor.OBJECTID)
+				{
+					mayor=comparendo;
+				}
 				//				Integer idVertice= 0;
 				//
 				//				VertexInfo info =  (VertexInfo) g.getInfoVertex(idVertice);
@@ -321,10 +347,20 @@ public class CargaGrafo {
 			BufferedReader br = new BufferedReader(new FileReader("./data/estaciones.geojson"));
 
 			//convert the json string back to object
+			bigEst=null;
 			Lista obj = gson.fromJson(br, Lista.class);
 			for (Features2 feature : obj.getInfo().getFeatures()) {
 				PoliceStation estacion=feature.getEstacion();
 				estaciones.put(estacion.getOBJECTID(), estacion);
+
+				if(bigEst==null)
+				{
+					bigEst=estacion;
+				}
+				else if(estacion.getOBJECTID()>bigEst.getOBJECTID())
+				{
+					bigEst=estacion;
+				}
 			}
 
 

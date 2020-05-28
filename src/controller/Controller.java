@@ -1,8 +1,7 @@
 package controller;
 
 
-import java.io.IOException;
-import java.util.ArrayList;
+
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -39,7 +38,6 @@ public class Controller {
 
 	ORArray<Integer> nodosConEstaciones; 
 
-	private Comparable<Comparendo>[] consulta;
 	HashTableLP<Integer,Comparendo> comparendos;
 	HashTableLP<Integer,PoliceStation> estaciones;
 	CargaGrafo cargaDatos;
@@ -59,7 +57,21 @@ public class Controller {
 		estaciones=cargaDatos.estaciones;
 		pequeno=new LatLng(cargaDatos.latmin,cargaDatos.lonmin);
 		grande=new LatLng(cargaDatos.latmax,cargaDatos.lonmax);
+
+
+		System.out.println("******************* Información de la carga *******************");
+		System.out.println("Comparendos en el archivo: "+ comparendos.getSize());
+		System.out.println("Comparendo con mayor OBJECTID: "+ cargaDatos.mayor);
+		System.out.println("Estaciones en el archivo: "+ estaciones.getSize());
+		System.out.println("Estación con mayor OBJECTID: "+ cargaDatos.bigEst);
+		System.out.println("Vértices en el grafo: "+ grafo.V());
+		VertexInfo verticeGrande=grafo.getInfoVertex(cargaDatos.vertMax);
+		System.out.println("Vértice con mayor ID: "+verticeGrande.getId()+" Latitud: "+verticeGrande.getCoordinates().lat+" Longitud: "+verticeGrande.getCoordinates().lon );
+		System.out.println("Arcos en el grafo: "+ grafo.E());
+		System.out.println("Arco con mayor ID: IDOrigen: "+cargaDatos.arcMax[0]  +" IDDestino: "+cargaDatos.arcMax[1]+ " Distancia: "+grafo.getInfoArc(cargaDatos.arcMax[0], cargaDatos.arcMax[1]));
+		System.out.println("***************************************************************");
 	}	
+	
 	public void run() 
 	{
 		Scanner lector = new Scanner(System.in);
