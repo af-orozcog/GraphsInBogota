@@ -533,11 +533,13 @@ public class Controller {
 		};
 		System.out.println("Organizando los vertices segun la cantidad de comparendos");
 		need.sort(comp);
+		ORArray<Coordinates> infraccionesAPintar = new ORArray<Coordinates>();
 		System.out.println("Terminando de organizar los vertices segun la cantidad de comparendos");
 		HashTableSC<Integer, Integer> needed = new HashTableSC<Integer, Integer>(200);
-		for(int i = need.getSize()-1, j = 0; i > -1 && j < m;--i,++j)
+		for(int i = need.getSize()-1, j = 0; i > -1 && j < m;--i,++j) {
 			needed.put(g.translate(need.getElement(i).getSecond()), 1);
-
+			infraccionesAPintar.add(grafo.getInfoVertex(infraccionesNodoGravedad.getElement(i).getSecond()).getCoor());
+		}
 		ORArray<Edge<Double>> aPintar = new ORArray<Edge<Double>>();
 		System.out.println("Empezando a limpiar el arbol");
 		while(needed.getSize() != 0) {
@@ -580,11 +582,12 @@ public class Controller {
 		};
 		System.out.println("Organizando los vertices segun la gravedad de los comparendos");
 		infraccionesNodoGravedad.sort(comp);
+		ORArray<Coordinates> infraccionesAPintar = new ORArray<Coordinates>();
 		System.out.println("Terminando de organizar los vertices segun la gravedad de los comparendos");
 		HashTableSC<Integer, Integer> needed = new HashTableSC<Integer, Integer>(200);
 		for(int i = infraccionesNodoGravedad.getSize()-1, j = 0; i > -1 && j < m;--i,++j) {
-			//System.out.println("id de los nodos "+ infraccionesNodoGravedad.getElement(i).getSecond());
 			needed.put(g.translate(infraccionesNodoGravedad.getElement(i).getSecond()), 1);
+			infraccionesAPintar.add(grafo.getInfoVertex(infraccionesNodoGravedad.getElement(i).getSecond()).getCoor());
 		}
 		ORArray<Edge<Double>> aPintar = new ORArray<Edge<Double>>();
 		System.out.println("Empezando a limpiar el arbol");
@@ -628,10 +631,11 @@ public class Controller {
 		System.out.println("Organizando los vertices segun la gravedad de los comparendos");
 		infraccionesNodoGravedad.sort(comp);
 		System.out.println("Terminando de organizar los vertices segun la gravedad de los comparendos");
+		ORArray<Coordinates> infraccionesAPintar = new ORArray<Coordinates>();
 		HashTableSC<Integer, Integer> needed = new HashTableSC<Integer, Integer>(200);
 		for(int i = infraccionesNodoGravedad.getSize()-1, j = 0; i > -1 && j < m;--i,++j) {
-			//	System.out.println("id de los nodos "+ infraccionesNodoGravedad.getElement(i).getSecond());
 			needed.put(infraccionesNodoGravedad.getElement(i).getSecond(), 1);
+			infraccionesAPintar.add(grafo.getInfoVertex(infraccionesNodoGravedad.getElement(i).getSecond()).getCoor());
 		}
 		System.out.println("Generando los caminos mas cortos");
 		Dijkstra caminos = new Dijkstra(this.grafo,nodosConEstaciones,false);
