@@ -369,20 +369,28 @@ public class Controller {
 					"#e6beff", "#9a6324", "#fffac8", "#800000", "#aaffc3", "#808000", 
 					"#ffd8b1", "#000075", "#808080", "#ffffff", "#000000"};
 			for(int color = 1; it.hasNext();++color) {
+				
+				ORArray<Edge<Double>> thro =  pintar.get(it.next());
+
+				final int constante=40000;
+				double radio=(thro.getSize()*2*constante)/grafo.V();
+				
 				CircleOptions settingsCircle=new CircleOptions();
 				settingsCircle.setFillColor(colores[color-1]);
-				settingsCircle.setRadius(20);
+				settingsCircle.setRadius(radio);
 				settingsCircle.setFillOpacity(0.35);
+				settingsCircle.setStrokeColor(colores[color-1]);
 
 				PolylineOptions settingsLine=new PolylineOptions();
 				settingsLine.setGeodesic(true);
 				settingsLine.setStrokeColor(colores[color-1]);
 				settingsLine.setStrokeOpacity(1.0);
 				settingsLine.setStrokeWeight(2.0);
+				
+				
 				example.setSettingsCircle(settingsCircle);
 				example.setSettingsLine(settingsLine);
 
-				ORArray<Edge<Double>> thro =  pintar.get(it.next());
 				for(Edge<Double> edg:  thro) {
 					int one = edg.either();
 					int ot = edg.other(one);
@@ -400,13 +408,13 @@ public class Controller {
 					{
 						PoliceStation estacion=estaciones.get(v1.getPoliceStation());
 						example.generateMarker(new LatLng(estacion.getEPOLATITUD(),estacion.getEPOLONGITU()));
-						example.generateArea(new LatLng(estacion.getEPOLATITUD(),estacion.getEPOLONGITU()), 20.0);
+						example.generateArea(new LatLng(estacion.getEPOLATITUD(),estacion.getEPOLONGITU()), radio);
 					}
 					if(v2.getPoliceStation()!=-1)
 					{
 						PoliceStation estacion=estaciones.get(v2.getPoliceStation());
 						example.generateMarker(new LatLng(estacion.getEPOLATITUD(),estacion.getEPOLONGITU()));
-						example.generateArea(new LatLng(estacion.getEPOLATITUD(),estacion.getEPOLONGITU()), 20.0);
+						example.generateArea(new LatLng(estacion.getEPOLATITUD(),estacion.getEPOLONGITU()), radio);
 					}
 					example.generateSimplePath(new LatLng(lat1,lon1), new LatLng(lat2,lon2), false);	
 				}

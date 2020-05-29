@@ -50,8 +50,6 @@ public class Mapa2 extends MapView{
 		Marker marker=null;
 		marker = new Marker(map);
 		marker.setPosition(pos);
-		map.setCenter(pos);
-		System.out.println("Graficado marker");
 		return marker;
 	}
 
