@@ -7,8 +7,11 @@ import java.util.Iterator;
 import java.util.Scanner;
 
 import com.teamdev.jxmaps.CircleOptions;
+import com.teamdev.jxmaps.Icon;
 import com.teamdev.jxmaps.LatLng;
+import com.teamdev.jxmaps.Marker;
 import com.teamdev.jxmaps.PolylineOptions;
+import com.teamdev.jxmaps.Size;
 
 import model.CargaGrafo;
 import model.Comparendo;
@@ -305,11 +308,20 @@ public class Controller {
 
 
 
-	public void generarMapa(String titulo,ORArray<Edge<Double>> paint,Graph<Integer,VertexInfo,Double> g,HashTableSC<Integer,ORArray<Edge<Double>>> pintar, int m )
+	public void generarMapa(String titulo,ORArray<Edge<Double>> paint,Graph<Integer,VertexInfo,Double> g,HashTableSC<Integer,ORArray<Edge<Double>>> pintar, int m,ORArray<Coordinates> coordenadas )
 	{
-		//System.out.println("cual es el sapo hp problema");
+		//Mapa
 		Mapa2 example = new Mapa2(titulo);
 
+		//Colores
+		String[]colores= {"#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231", 
+				"#911eb4", "#46f0f0", "#f032e6", "#bcf60c", "#fabebe", "#008080",
+				"#e6beff", "#9a6324", "#fffac8", "#800000", "#aaffc3", "#808000", 
+				"#ffd8b1", "#000075", "#808080", "#ffffff", "#000000"};
+		//Icono de la policía
+		Icon icon = new Icon();
+		icon.loadFromFile("./data/pol.png");
+		icon.setScaledSize(new Size(50.0,50.0));
 
 		if(paint!=null)
 		{
@@ -318,6 +330,7 @@ public class Controller {
 			//Final
 			Edge<Double> ultimo=paint.getElement(paint.getSize()-1);
 
+			int color=0;
 			//Primer nodo
 			int one = primer.either();
 			//Ultimo nodo
@@ -331,6 +344,7 @@ public class Controller {
 			double lon2 = twoo.lon;
 
 			example.generateMarker(new LatLng(lat1,lon1));
+
 			example.generateMarker(new LatLng(lat2,lon2));
 
 			for(Edge<Double> edg: paint) {
@@ -342,7 +356,42 @@ public class Controller {
 				lon1 = onee.lon;
 				lat2 = twoo.lat;
 				lon2 = twoo.lon;
-				example.generateSimplePath(new LatLng(lat1,lon1), new LatLng(lat2,lon2), false);			
+				example.generateSimplePath(new LatLng(lat1,lon1), new LatLng(lat2,lon2), false);
+
+
+				if(coordenadas!=null) {
+					for(Coordinates coorde:coordenadas)
+					{
+						if(lat2==coorde.lat && lon2==coorde.lon)
+						{
+							example.generateMarker(new LatLng(lat2,lon2));
+							color++;
+							if(color==colores.length)
+								color=0;
+							PolylineOptions settingsLine=new PolylineOptions();
+							settingsLine.setGeodesic(true);
+							settingsLine.setStrokeColor(colores[color]);
+							settingsLine.setStrokeOpacity(1.0);
+							settingsLine.setStrokeWeight(2.0);
+							example.setSettingsLine(settingsLine);
+						}
+						else if(lat1==coorde.lat && lon1==coorde.lon)
+						{
+							example.generateMarker(new LatLng(lat1,lon1));
+						}
+					}
+				}
+			}
+			if (coordenadas!=null)
+			{
+				Iterator<Integer> llave=estaciones.keys();
+				while(llave.hasNext())
+				{
+					int k=llave.next();
+					PoliceStation estacionA=estaciones.get(k);
+					Marker marcador=example.generateMarker(new LatLng(estacionA.getEPOLATITUD(),estacionA.getEPOLONGITU()));
+					marcador.setIcon(icon);
+				}
 			}
 		}
 		else if(g!=null && pintar==null) {
@@ -365,10 +414,7 @@ public class Controller {
 		{
 			Graph<Integer,VertexInfo,Double> ausar=g;
 			Iterator<Integer> it = pintar.keys();
-			String[]colores= {"#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231", 
-					"#911eb4", "#46f0f0", "#f032e6", "#bcf60c", "#fabebe", "#008080",
-					"#e6beff", "#9a6324", "#fffac8", "#800000", "#aaffc3", "#808000", 
-					"#ffd8b1", "#000075", "#808080", "#ffffff", "#000000"};
+
 			for(int color = 1; it.hasNext();++color) {
 
 				PoliceStation estacion=null;
@@ -422,7 +468,8 @@ public class Controller {
 				settingsCircle.setFillOpacity(0.35);
 				settingsCircle.setStrokeColor(colores[color-1]);
 				example.setSettingsCircle(settingsCircle);
-				example.generateMarker(new LatLng(estacion.getEPOLATITUD(),estacion.getEPOLONGITU()));
+				Marker marcador=example.generateMarker(new LatLng(estacion.getEPOLATITUD(),estacion.getEPOLONGITU()));
+				marcador.setIcon(icon);
 				example.generateArea(new LatLng(estacion.getEPOLATITUD(),estacion.getEPOLONGITU()), radio);
 			}
 		}
@@ -451,7 +498,7 @@ public class Controller {
 		ORArray<Edge<Double>> paint = caminos.journey(idVertice2);
 		System.out.println("terminando de calcular el camino optimo");
 		System.out.println("tamanio de arcos "+ paint.getSize());
-		generarMapa("Req 1A",paint,null,null,0);
+		generarMapa("Req 1A",paint,null,null,0,null);
 
 
 	}
@@ -473,7 +520,7 @@ public class Controller {
 		if(caminos.distance(idVertice2) == Double.POSITIVE_INFINITY)return;
 		System.out.println("calculando el camino optimo");
 		ORArray<Edge<Double>> paint = caminos.journey(idVertice2);
-		generarMapa("Req 1B",paint,null,null,0);
+		generarMapa("Req 1B",paint,null,null,0,null);
 
 		System.out.println("terminando de calcular el camino optimo");
 		System.out.println("tamanio de arcos "+ paint.getSize());
@@ -563,7 +610,7 @@ public class Controller {
 			send.addEdge(g.translateInverse(from), g.translateInverse(to), ed.getInfo());
 		}
 		System.out.println("Terminando de crear el nuevo arbol para apintar");
-		generarMapa("Arbol mayor comparendos",null,send,null,0);
+		generarMapa("Arbol mayor comparendos",null,send,null,0,null);
 	}
 
 
@@ -612,7 +659,7 @@ public class Controller {
 		}
 		System.out.println("Terminando de crear el nuevo arbol para apintar");
 
-		generarMapa("Arbol mayor Gravedad",null,send,null,0);
+		generarMapa("Arbol mayor Gravedad",null,send,null,0,null);
 		//System.out.println("el tamanio del grafo en nodos " + aPintar.getSize());
 
 	}
@@ -654,7 +701,7 @@ public class Controller {
 		}
 		System.out.println("terminando de crear el arreglo de distancia minimas");
 		System.out.println("El costo de este camino que conecta el grafo es: "+ costo);
-		generarMapa("Caminos cortos policía",aPintar,null,null,0);
+		generarMapa("Caminos cortos policía",aPintar,null,null,0,infraccionesAPintar);
 
 	}
 
@@ -705,7 +752,7 @@ public class Controller {
 		System.out.println("Empezando a generar los componentes conectados");
 		HashTableSC<Integer,ORArray<Edge<Double>>> pintar = Graph.ConnectedComponent(grafoPintar);
 		System.out.println("Terminando de generar los componentes conectados");
-		generarMapa("Componentes estación de policía",null,grafoPintar,pintar,m);
+		generarMapa("Componentes estación de policía",null,grafoPintar,pintar,m,null);
 
 	}
 
