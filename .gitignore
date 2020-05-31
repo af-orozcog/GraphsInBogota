@@ -16,6 +16,5 @@ local.properties
 # Locally stored "Eclipse launch configurations"
 *.launch
 
-data/*
-!data/comparendos_dei_2018_small.geojson
+data/
 !data/.gitignore
