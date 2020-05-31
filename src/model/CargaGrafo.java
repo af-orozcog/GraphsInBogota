@@ -305,6 +305,11 @@ public class CargaGrafo {
 				if(comparendo.getCLASE_VEHICULO().equals("AUTOMÓVIL"))
 					comparendo.setCLASE_VEHICULO("AUTOMOVIL");
 				comparendos.put(comparendo.OBJECTID, comparendo);
+				if(comparendo.getTIPO_SERVICIO().endsWith("blico"))
+				{
+					comparendo.setTIPO_SERVICIO("P?blico");
+
+				}
 				if(mayor==null)
 				{
 					mayor=comparendo;

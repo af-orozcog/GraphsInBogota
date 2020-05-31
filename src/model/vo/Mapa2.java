@@ -166,7 +166,7 @@ public class Mapa2 extends MapView{
 			e1.printStackTrace();
 		}
 		System.out.println("|");
-		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		frame.add(this, BorderLayout.CENTER);
 		frame.setSize(700, 500);
 		frame.setLocationRelativeTo(null);
