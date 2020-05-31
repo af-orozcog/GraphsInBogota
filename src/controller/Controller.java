@@ -66,10 +66,10 @@ public class Controller {
 		public int compareTo(Gravedad o) {
 			if(o.TipoServicio.compareTo(this.TipoServicio) == 0 )
 				return infraccion.compareTo(o.infraccion);
-			if(TipoServicio.compareTo("Publico") == 0) return 1;
-			if(o.TipoServicio.compareTo("Publico") == 0) return 1;
+			if(TipoServicio.compareTo("P?blico") == 0) return 1;
+			if(o.TipoServicio.compareTo("P?blico") == 0) return -1;
 			if(TipoServicio.compareTo("Oficial") == 0) return 1;
-			return 0;
+			return -1;
 		}
 
 	}
