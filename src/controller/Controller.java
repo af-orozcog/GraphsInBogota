@@ -549,7 +549,7 @@ public class Controller {
 			g.addEdge(grafo.translateInverse(from), grafo.translateInverse(to), ed.getInfo());
 		}
 
-		//generarMapa("MST",null,g,null);
+//		generarMapa("MST",null,g,null,0,null);
 		System.out.println("Terminando de generar el grafo de los Arcos del MST");
 		return g;
 	}
