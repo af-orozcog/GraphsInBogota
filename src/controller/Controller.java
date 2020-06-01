@@ -694,6 +694,7 @@ public class Controller {
 		while(it.hasNext()) {
 			Integer see = it.next();
 			ORArray<Edge<Double>> road = caminos.journey(see);
+			if(road == null) continue;
 			for(Edge<Double> edg: road){
 				aPintar.add(edg);
 				costo += edg.getInfo();
